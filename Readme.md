@@ -33,8 +33,8 @@ $ cd hw3
 $ cd chkpt5_demo
 $ make
 $ make basic # to test chkpt1
-$ make arith
-$ make Pointer
-$ make Jump
-$ make Function
+$ make arith # to test chkpt2
+$ make Pointer # to test chkpt3
+$ make Jump # to test chkpt4
+$ make Function # to test chkpt5
 ```
