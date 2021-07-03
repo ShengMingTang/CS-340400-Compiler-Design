@@ -1,0 +1,30 @@
+#macro:NULL
+1:         NULL
+#macro:__COUNTER__
+2:      __COUNTER__
+3:
+#macro:__LINE__
+4:  __LINE__
+5:
+#macro:INT_MAX
+6:        INT_MAX
+7:
+#macro:INT_MIN
+8:    INT_MIN
+9:
+10:
+11:
+#macro:CHAR_MAX
+12:      CHAR_MAX
+13:
+#macro:CHAR_MIN
+14:              CHAR_MIN
+15:
+#macro:MAX
+#macro:MIN
+16:          MAX    MIN
+17:
+18:
+19:
+20:
+21:

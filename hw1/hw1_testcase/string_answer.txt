@@ -1,0 +1,13 @@
+#string:"simple string"
+1:"simple string"
+#string:" escaped \" string"
+2:" escaped \" string"
+#string:"escaped char '\\n'\' \""
+3:      "escaped char '\\n'\' \""
+4:
+#string:"complex escape \123 \32 \443 \\"
+5:"complex escape \123 \32 \443 \\"
+6:
+#string:"\x85354DBCEE    \102 \uffed \Ufaaaaaad   "
+7:"\x85354DBCEE    \102 \uffed \Ufaaaaaad   "
+8:

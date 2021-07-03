@@ -1,0 +1,16 @@
+1:#pragma source on
+#integer:0
+2:0
+3:
+4:    #pragma       token    off
+5:
+6:0
+7:
+11:#pragma     source on
+12:
+13:0
+14:#pragma token on
+15:
+#integer:0
+16:0
+17:

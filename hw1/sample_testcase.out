@@ -1,0 +1,26 @@
+#key:int
+#id:main
+#punc:(
+#punc:)
+#punc:{
+1:int main() {
+#key:int
+#id:a
+#op:=
+#integer:1
+#punc:;
+2:  int a = 1;
+#key:int
+#id:b
+#op:=
+#integer:-1
+#punc:;
+3:  int b = -1;
+#key:return
+#id:a
+#op:+
+#id:b
+#punc:;
+4:  return a + b;
+#punc:}
+5:}

@@ -1,0 +1,527 @@
+   0  $accept : program $end
+
+   1  program :
+   2          | extdefs
+
+   3  extdefs : extdef
+   4          | extdefs extdef
+
+   5  extdef : TYPESPEC notype_declarator ';'
+
+   6  $$1 :
+
+   7  $$2 :
+
+   8  $$3 :
+
+   9  extdef : notype_declarator $$1 '{' xdecls $$2 stmts $$3 '}'
+  10         | error ';'
+  11         | ';'
+
+  12  expr_no_commas : primary
+  13                 | expr_no_commas '+' expr_no_commas
+  14                 | expr_no_commas '=' expr_no_commas
+  15                 | expr_no_commas '*' expr_no_commas
+  16                 | expr_no_commas ARITHCOMPARE expr_no_commas
+
+  17  primary : IDENTIFIER
+  18          | CONSTANT
+  19          | STRING
+  20          | primary PLUSPLUS
+
+  21  notype_declarator : notype_declarator '(' parmlist ')'
+  22                    | IDENTIFIER
+
+  23  parmlist :
+  24           | parms
+
+  25  parms : parm
+  26        | parms ',' parm
+
+  27  parm : TYPESPEC notype_declarator
+
+  28  stmts : stmt
+  29        | stmts stmt
+
+  30  stmt : expr_no_commas ';'
+
+  31  xdecls :
+  32         | decls
+
+  33  decls : decl
+  34        | decls decl
+
+  35  decl : TYPESPEC notype_declarator ';'
+
+state 0
+	$accept : . program $end  (0)
+	program : .  (1)
+
+	error  shift 1
+	IDENTIFIER  shift 2
+	TYPESPEC  shift 3
+	';'  shift 4
+	$end  reduce 1
+
+	program  goto 5
+	notype_declarator  goto 6
+	extdefs  goto 7
+	extdef  goto 8
+
+
+state 1
+	extdef : error . ';'  (10)
+
+	';'  shift 9
+	.  error
+
+
+state 2
+	notype_declarator : IDENTIFIER .  (22)
+
+	.  reduce 22
+
+
+state 3
+	extdef : TYPESPEC . notype_declarator ';'  (5)
+
+	IDENTIFIER  shift 2
+	.  error
+
+	notype_declarator  goto 10
+
+
+state 4
+	extdef : ';' .  (11)
+
+	.  reduce 11
+
+
+state 5
+	$accept : program . $end  (0)
+
+	$end  accept
+
+
+state 6
+	extdef : notype_declarator . $$1 '{' xdecls $$2 stmts $$3 '}'  (9)
+	notype_declarator : notype_declarator . '(' parmlist ')'  (21)
+	$$1 : .  (6)
+
+	'('  shift 11
+	'{'  reduce 6
+
+	$$1  goto 12
+
+
+state 7
+	program : extdefs .  (2)
+	extdefs : extdefs . extdef  (4)
+
+	error  shift 1
+	IDENTIFIER  shift 2
+	TYPESPEC  shift 3
+	';'  shift 4
+	$end  reduce 2
+
+	notype_declarator  goto 6
+	extdef  goto 13
+
+
+state 8
+	extdefs : extdef .  (3)
+
+	.  reduce 3
+
+
+state 9
+	extdef : error ';' .  (10)
+
+	.  reduce 10
+
+
+state 10
+	extdef : TYPESPEC notype_declarator . ';'  (5)
+	notype_declarator : notype_declarator . '(' parmlist ')'  (21)
+
+	';'  shift 14
+	'('  shift 11
+	.  error
+
+
+state 11
+	notype_declarator : notype_declarator '(' . parmlist ')'  (21)
+	parmlist : .  (23)
+
+	TYPESPEC  shift 15
+	')'  reduce 23
+
+	parmlist  goto 16
+	parms  goto 17
+	parm  goto 18
+
+
+state 12
+	extdef : notype_declarator $$1 . '{' xdecls $$2 stmts $$3 '}'  (9)
+
+	'{'  shift 19
+	.  error
+
+
+state 13
+	extdefs : extdefs extdef .  (4)
+
+	.  reduce 4
+
+
+state 14
+	extdef : TYPESPEC notype_declarator ';' .  (5)
+
+	.  reduce 5
+
+
+state 15
+	parm : TYPESPEC . notype_declarator  (27)
+
+	IDENTIFIER  shift 2
+	.  error
+
+	notype_declarator  goto 20
+
+
+state 16
+	notype_declarator : notype_declarator '(' parmlist . ')'  (21)
+
+	')'  shift 21
+	.  error
+
+
+state 17
+	parmlist : parms .  (24)
+	parms : parms . ',' parm  (26)
+
+	','  shift 22
+	')'  reduce 24
+
+
+state 18
+	parms : parm .  (25)
+
+	.  reduce 25
+
+
+state 19
+	extdef : notype_declarator $$1 '{' . xdecls $$2 stmts $$3 '}'  (9)
+	xdecls : .  (31)
+
+	TYPESPEC  shift 23
+	IDENTIFIER  reduce 31
+	CONSTANT  reduce 31
+	STRING  reduce 31
+
+	xdecls  goto 24
+	decls  goto 25
+	decl  goto 26
+
+
+state 20
+	notype_declarator : notype_declarator . '(' parmlist ')'  (21)
+	parm : TYPESPEC notype_declarator .  (27)
+
+	'('  shift 11
+	','  reduce 27
+	')'  reduce 27
+
+
+state 21
+	notype_declarator : notype_declarator '(' parmlist ')' .  (21)
+
+	.  reduce 21
+
+
+state 22
+	parms : parms ',' . parm  (26)
+
+	TYPESPEC  shift 15
+	.  error
+
+	parm  goto 27
+
+
+state 23
+	decl : TYPESPEC . notype_declarator ';'  (35)
+
+	IDENTIFIER  shift 2
+	.  error
+
+	notype_declarator  goto 28
+
+
+state 24
+	extdef : notype_declarator $$1 '{' xdecls . $$2 stmts $$3 '}'  (9)
+	$$2 : .  (7)
+
+	.  reduce 7
+
+	$$2  goto 29
+
+
+state 25
+	xdecls : decls .  (32)
+	decls : decls . decl  (34)
+
+	TYPESPEC  shift 23
+	IDENTIFIER  reduce 32
+	CONSTANT  reduce 32
+	STRING  reduce 32
+
+	decl  goto 30
+
+
+state 26
+	decls : decl .  (33)
+
+	.  reduce 33
+
+
+state 27
+	parms : parms ',' parm .  (26)
+
+	.  reduce 26
+
+
+state 28
+	notype_declarator : notype_declarator . '(' parmlist ')'  (21)
+	decl : TYPESPEC notype_declarator . ';'  (35)
+
+	';'  shift 31
+	'('  shift 11
+	.  error
+
+
+state 29
+	extdef : notype_declarator $$1 '{' xdecls $$2 . stmts $$3 '}'  (9)
+
+	IDENTIFIER  shift 32
+	CONSTANT  shift 33
+	STRING  shift 34
+	.  error
+
+	primary  goto 35
+	expr_no_commas  goto 36
+	stmts  goto 37
+	stmt  goto 38
+
+
+state 30
+	decls : decls decl .  (34)
+
+	.  reduce 34
+
+
+state 31
+	decl : TYPESPEC notype_declarator ';' .  (35)
+
+	.  reduce 35
+
+
+state 32
+	primary : IDENTIFIER .  (17)
+
+	.  reduce 17
+
+
+state 33
+	primary : CONSTANT .  (18)
+
+	.  reduce 18
+
+
+state 34
+	primary : STRING .  (19)
+
+	.  reduce 19
+
+
+state 35
+	expr_no_commas : primary .  (12)
+	primary : primary . PLUSPLUS  (20)
+
+	PLUSPLUS  shift 39
+	';'  reduce 12
+	'='  reduce 12
+	ARITHCOMPARE  reduce 12
+	'+'  reduce 12
+	'*'  reduce 12
+
+
+state 36
+	expr_no_commas : expr_no_commas . '+' expr_no_commas  (13)
+	expr_no_commas : expr_no_commas . '=' expr_no_commas  (14)
+	expr_no_commas : expr_no_commas . '*' expr_no_commas  (15)
+	expr_no_commas : expr_no_commas . ARITHCOMPARE expr_no_commas  (16)
+	stmt : expr_no_commas . ';'  (30)
+
+	';'  shift 40
+	'='  shift 41
+	ARITHCOMPARE  shift 42
+	'+'  shift 43
+	'*'  shift 44
+	.  error
+
+
+state 37
+	extdef : notype_declarator $$1 '{' xdecls $$2 stmts . $$3 '}'  (9)
+	stmts : stmts . stmt  (29)
+	$$3 : .  (8)
+
+	IDENTIFIER  shift 32
+	CONSTANT  shift 33
+	STRING  shift 34
+	'}'  reduce 8
+
+	primary  goto 35
+	expr_no_commas  goto 36
+	$$3  goto 45
+	stmt  goto 46
+
+
+state 38
+	stmts : stmt .  (28)
+
+	.  reduce 28
+
+
+state 39
+	primary : primary PLUSPLUS .  (20)
+
+	.  reduce 20
+
+
+state 40
+	stmt : expr_no_commas ';' .  (30)
+
+	.  reduce 30
+
+
+state 41
+	expr_no_commas : expr_no_commas '=' . expr_no_commas  (14)
+
+	IDENTIFIER  shift 32
+	CONSTANT  shift 33
+	STRING  shift 34
+	.  error
+
+	primary  goto 35
+	expr_no_commas  goto 47
+
+
+state 42
+	expr_no_commas : expr_no_commas ARITHCOMPARE . expr_no_commas  (16)
+
+	IDENTIFIER  shift 32
+	CONSTANT  shift 33
+	STRING  shift 34
+	.  error
+
+	primary  goto 35
+	expr_no_commas  goto 48
+
+
+state 43
+	expr_no_commas : expr_no_commas '+' . expr_no_commas  (13)
+
+	IDENTIFIER  shift 32
+	CONSTANT  shift 33
+	STRING  shift 34
+	.  error
+
+	primary  goto 35
+	expr_no_commas  goto 49
+
+
+state 44
+	expr_no_commas : expr_no_commas '*' . expr_no_commas  (15)
+
+	IDENTIFIER  shift 32
+	CONSTANT  shift 33
+	STRING  shift 34
+	.  error
+
+	primary  goto 35
+	expr_no_commas  goto 50
+
+
+state 45
+	extdef : notype_declarator $$1 '{' xdecls $$2 stmts $$3 . '}'  (9)
+
+	'}'  shift 51
+	.  error
+
+
+state 46
+	stmts : stmts stmt .  (29)
+
+	.  reduce 29
+
+
+state 47
+	expr_no_commas : expr_no_commas . '+' expr_no_commas  (13)
+	expr_no_commas : expr_no_commas . '=' expr_no_commas  (14)
+	expr_no_commas : expr_no_commas '=' expr_no_commas .  (14)
+	expr_no_commas : expr_no_commas . '*' expr_no_commas  (15)
+	expr_no_commas : expr_no_commas . ARITHCOMPARE expr_no_commas  (16)
+
+	'='  shift 41
+	ARITHCOMPARE  shift 42
+	'+'  shift 43
+	'*'  shift 44
+	';'  reduce 14
+
+
+state 48
+	expr_no_commas : expr_no_commas . '+' expr_no_commas  (13)
+	expr_no_commas : expr_no_commas . '=' expr_no_commas  (14)
+	expr_no_commas : expr_no_commas . '*' expr_no_commas  (15)
+	expr_no_commas : expr_no_commas . ARITHCOMPARE expr_no_commas  (16)
+	expr_no_commas : expr_no_commas ARITHCOMPARE expr_no_commas .  (16)
+
+	'+'  shift 43
+	'*'  shift 44
+	';'  reduce 16
+	'='  reduce 16
+	ARITHCOMPARE  reduce 16
+
+
+state 49
+	expr_no_commas : expr_no_commas . '+' expr_no_commas  (13)
+	expr_no_commas : expr_no_commas '+' expr_no_commas .  (13)
+	expr_no_commas : expr_no_commas . '=' expr_no_commas  (14)
+	expr_no_commas : expr_no_commas . '*' expr_no_commas  (15)
+	expr_no_commas : expr_no_commas . ARITHCOMPARE expr_no_commas  (16)
+
+	'*'  shift 44
+	';'  reduce 13
+	'='  reduce 13
+	ARITHCOMPARE  reduce 13
+	'+'  reduce 13
+
+
+state 50
+	expr_no_commas : expr_no_commas . '+' expr_no_commas  (13)
+	expr_no_commas : expr_no_commas . '=' expr_no_commas  (14)
+	expr_no_commas : expr_no_commas . '*' expr_no_commas  (15)
+	expr_no_commas : expr_no_commas '*' expr_no_commas .  (15)
+	expr_no_commas : expr_no_commas . ARITHCOMPARE expr_no_commas  (16)
+
+	.  reduce 15
+
+
+state 51
+	extdef : notype_declarator $$1 '{' xdecls $$2 stmts $$3 '}' .  (9)
+
+	.  reduce 9
+
+
+59 terminals, 18 nonterminals
+36 grammar rules, 52 states

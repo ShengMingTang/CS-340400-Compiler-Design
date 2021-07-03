@@ -1,0 +1,21 @@
+1:// single line comment 1
+2:/// single line comment 2
+3:// escaped char '\n' comment
+4:/// escaped string "\0123" comment
+5:  // com' something
+6:	   		/// tabbed comment "string" \n
+7:					// // marks a single line comment
+8:					// /* also marks comments */ \t \b \n
+9:/* multiline comment */
+10:/* // single line comment
+11:		in multiline env \\ \n */
+12:/* this should\
+13:			\			\	 not be escaped			 \*/
+14:/* string """ in
+15:	 multiline string *
+16:
+17:	 */
+18:/** @brief Nothing special
+19: * @note This is a docstring
+20: */
+21:

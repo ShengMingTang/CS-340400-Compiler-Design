@@ -1,0 +1,1 @@
+<func_def>intmain(){<stmt><expr><expr>printf</expr>(<expr>"%p\n"</expr>,<expr>0</expr>)</expr>;</stmt><stmt>return<expr>0</expr>;</stmt>}</func_def>

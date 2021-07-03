@@ -1,0 +1,53 @@
+1:/** @brief Recursive factorial
+2: * @note This is a bad practice. Use for-loops instead. 
+3: * @note This implementation is hidden using #pragma source off
+4: */
+11:#pragma source on
+12:#pragma token on
+#key:int
+#id:main
+#punc:(
+#key:const
+#key:int
+#id:argc
+#punc:,
+#key:const
+#key:char
+#op:*
+#op:*
+#id:argv
+#punc:)
+#punc:{
+13:int main(const int argc, const char ** argv) {
+14:  /* Hope the stack can survive this call (finger-crossed x) */
+#key:const
+#key:int
+#id:ret
+#op:=
+#id:printf
+#punc:(
+#string:"Call factorial(%d) \100 line (%d)\n"
+#punc:,
+#id:factorial
+#punc:(
+#id:atoi
+#punc:(
+#id:argv
+#punc:[
+#integer:1
+#punc:]
+#punc:)
+#punc:)
+#punc:,
+#macro:__LINE__
+#punc:)
+#punc:;
+15:  const int ret = printf("Call factorial(%d) \100 line (%d)\n", factorial(atoi(argv[1])), __LINE__); // Here we use \100 for @ in string
+#key:return
+#id:ret
+#punc:;
+16:  return ret;
+#punc:}
+#punc:;
+17:};
+18:

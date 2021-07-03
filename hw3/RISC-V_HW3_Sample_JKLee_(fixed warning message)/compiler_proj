@@ -1,0 +1,12 @@
+
+echo lex ss2.source
+lex ss2.source
+
+echo yacc -vd y2.y
+yacc -vd y2.y
+
+echo cc -c code.c
+cc -c code.c
+
+echo cc lex.yy.c y.tab.c code.c
+cc lex.yy.c y.tab.c code.c -lfl

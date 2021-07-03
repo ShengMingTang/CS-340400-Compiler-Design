@@ -1,0 +1,4609 @@
+   0  $accept : program $end
+
+   1  program : programComp
+   2          | program programComp
+
+   3  programComp : delVarsScalar
+   4              | delVarsArray
+   5              | delFn ';'
+   6              | delFn compoundStmt
+
+   7  expr : '(' expr ')'
+   8       | expr assignment expr
+   9       | expr '+' expr
+  10       | expr '-' expr
+  11       | expr '*' expr
+  12       | expr '/' expr
+  13       | expr '%' expr
+  14       | expr '|' expr
+  15       | expr '&' expr
+  16       | expr '^' expr
+  17       | expr LOGICALOR expr
+  18       | expr LOGICALAND expr
+  19       | expr EQNEQ expr
+  20       | expr RELATION expr
+  21       | expr BITSHIFT expr
+  22       | '+' expr
+  23       | '-' expr
+  24       | '&' expr
+  25       | '*' expr
+  26       | '!' expr
+  27       | '~' expr
+  28       | INCDEC expr
+  29       | expr INCDEC
+  30       | factor
+  31       | expr '(' args ')'
+  32       | '(' delType ')' expr
+  33       | expr MEMBER ID
+
+  34  assignment : '='
+  35             | ASSIGNMENT
+
+  36  factor : mutable
+  37         | immutable
+
+  38  mutable : ID
+  39          | ID delArrayDims
+
+  40  immutable : const
+
+  41  args : expr
+  42       | args ',' expr
+  43       |
+
+  44  delType : INT
+  45          | delLongShort INT
+  46          | SIGNED_UNSIGNED INT
+  47          | SIGNED_UNSIGNED delLongShort INT
+  48          | CONST INT
+  49          | CONST delLongShort INT
+  50          | CONST SIGNED_UNSIGNED INT
+  51          | CONST SIGNED_UNSIGNED delLongShort INT
+  52          | CHAR
+  53          | delLongShort
+  54          | SIGNED_UNSIGNED CHAR
+  55          | SIGNED_UNSIGNED delLongShort
+  56          | CONST CHAR
+  57          | CONST delLongShort
+  58          | CONST SIGNED_UNSIGNED CHAR
+  59          | CONST SIGNED_UNSIGNED delLongShort
+  60          | SIGNED_UNSIGNED
+  61          | FLOAT
+  62          | DOUBLE
+  63          | VOID
+  64          | CONST SIGNED_UNSIGNED
+  65          | CONST FLOAT
+  66          | CONST DOUBLE
+  67          | CONST VOID
+  68          | CONST
+
+  69  delLongShort : LONG
+  70               | LONG LONG
+  71               | SHORT
+
+  72  const : CONST_INT
+  73        | CONST_FLOAT
+  74        | CONST_CHAR
+  75        | CONST_STRING
+
+  76  delVarsScalar : delType delScalars ';'
+
+  77  delVarsArray : delType delArrays ';'
+
+  78  delScalars : delScalar
+  79             | delScalars ',' delScalar
+
+  80  delScalar : ID
+  81            | ID '=' expr
+  82            | '*' ID
+  83            | '*' ID '=' expr
+
+  84  delArrays : delArray
+  85            | delArrays ',' delArray
+
+  86  delArray : ID delArrayDims
+  87           | ID delArrayDims '=' '{' arrayContents '}'
+
+  88  delArrayDims : '[' expr ']'
+  89               | delArrayDims '[' expr ']'
+
+  90  arrayContents : arrayContent
+  91                | arrayContents ',' arrayContent
+
+  92  arrayContent : '{' arrayContents '}'
+  93               | expr
+
+  94  delFn : delType ID '(' delFnParams ')'
+  95        | delType '*' ID '(' delFnParams ')'
+
+  96  delFnParams : delFnParam
+  97              | delFnParams ',' delFnParam
+  98              |
+
+  99  delFnParam : delType
+ 100             | delType '*'
+ 101             | delType ID
+ 102             | delType '*' ID
+
+ 103  stmts : stmts stmt
+ 104        |
+
+ 105  stmt : expr ';'
+ 106       | ifElseStmt
+ 107       | switchStmt
+ 108       | whileStmt
+ 109       | forStmt
+ 110       | returnStmt
+ 111       | breakStmt
+ 112       | continueStmt
+ 113       | compoundStmt
+ 114       | delVarsScalar
+ 115       | delVarsArray
+
+ 116  ifElseStmt : IF '(' expr ')' compoundStmt
+ 117             | IF '(' expr ')' compoundStmt ELSE compoundStmt
+
+ 118  switchStmt : SWITCH '(' expr ')' '{' switchClauses '}'
+ 119             | SWITCH '(' expr ')' '{' '}'
+
+ 120  switchClauses : switchClause
+ 121                | switchClauses switchClause
+
+ 122  switchClause : CASE expr ':' stmts
+ 123               | DEFAULT ':' stmts
+
+ 124  whileStmt : WHILE '(' expr ')' stmt
+ 125            | DO stmt WHILE '(' expr ')' ';'
+
+ 126  forStmt : FOR '(' forExpr ';' forExpr ';' forExpr ')' stmt
+
+ 127  forExpr : expr
+ 128          |
+
+ 129  returnStmt : RETURN expr ';'
+ 130             | RETURN ';'
+
+ 131  breakStmt : BREAK ';'
+
+ 132  continueStmt : CONTINUE ';'
+
+ 133  compoundStmt : '{' stmts '}'
+
+state 0
+	$accept : . program $end  (0)
+
+	CONST  shift 1
+	SIGNED_UNSIGNED  shift 2
+	LONG  shift 3
+	SHORT  shift 4
+	INT  shift 5
+	CHAR  shift 6
+	FLOAT  shift 7
+	DOUBLE  shift 8
+	VOID  shift 9
+	.  error
+
+	program  goto 10
+	programComp  goto 11
+	delType  goto 12
+	delLongShort  goto 13
+	delVarsScalar  goto 14
+	delVarsArray  goto 15
+	delFn  goto 16
+
+
+state 1
+	delType : CONST . INT  (48)
+	delType : CONST . delLongShort INT  (49)
+	delType : CONST . SIGNED_UNSIGNED INT  (50)
+	delType : CONST . SIGNED_UNSIGNED delLongShort INT  (51)
+	delType : CONST . CHAR  (56)
+	delType : CONST . delLongShort  (57)
+	delType : CONST . SIGNED_UNSIGNED CHAR  (58)
+	delType : CONST . SIGNED_UNSIGNED delLongShort  (59)
+	delType : CONST . SIGNED_UNSIGNED  (64)
+	delType : CONST . FLOAT  (65)
+	delType : CONST . DOUBLE  (66)
+	delType : CONST . VOID  (67)
+	delType : CONST .  (68)
+
+	SIGNED_UNSIGNED  shift 17
+	LONG  shift 3
+	SHORT  shift 4
+	INT  shift 18
+	CHAR  shift 19
+	FLOAT  shift 20
+	DOUBLE  shift 21
+	VOID  shift 22
+	ID  reduce 68
+	','  reduce 68
+	'*'  reduce 68
+	')'  reduce 68
+
+	delLongShort  goto 23
+
+
+state 2
+	delType : SIGNED_UNSIGNED . INT  (46)
+	delType : SIGNED_UNSIGNED . delLongShort INT  (47)
+	delType : SIGNED_UNSIGNED . CHAR  (54)
+	delType : SIGNED_UNSIGNED . delLongShort  (55)
+	delType : SIGNED_UNSIGNED .  (60)
+
+	LONG  shift 3
+	SHORT  shift 4
+	INT  shift 24
+	CHAR  shift 25
+	ID  reduce 60
+	','  reduce 60
+	'*'  reduce 60
+	')'  reduce 60
+
+	delLongShort  goto 26
+
+
+state 3
+	delLongShort : LONG .  (69)
+	delLongShort : LONG . LONG  (70)
+
+	LONG  shift 27
+	INT  reduce 69
+	ID  reduce 69
+	','  reduce 69
+	'*'  reduce 69
+	')'  reduce 69
+
+
+state 4
+	delLongShort : SHORT .  (71)
+
+	.  reduce 71
+
+
+state 5
+	delType : INT .  (44)
+
+	.  reduce 44
+
+
+state 6
+	delType : CHAR .  (52)
+
+	.  reduce 52
+
+
+state 7
+	delType : FLOAT .  (61)
+
+	.  reduce 61
+
+
+state 8
+	delType : DOUBLE .  (62)
+
+	.  reduce 62
+
+
+state 9
+	delType : VOID .  (63)
+
+	.  reduce 63
+
+
+state 10
+	$accept : program . $end  (0)
+	program : program . programComp  (2)
+
+	$end  accept
+	CONST  shift 1
+	SIGNED_UNSIGNED  shift 2
+	LONG  shift 3
+	SHORT  shift 4
+	INT  shift 5
+	CHAR  shift 6
+	FLOAT  shift 7
+	DOUBLE  shift 8
+	VOID  shift 9
+	.  error
+
+	programComp  goto 28
+	delType  goto 12
+	delLongShort  goto 13
+	delVarsScalar  goto 14
+	delVarsArray  goto 15
+	delFn  goto 16
+
+
+state 11
+	program : programComp .  (1)
+
+	.  reduce 1
+
+
+state 12
+	delVarsScalar : delType . delScalars ';'  (76)
+	delVarsArray : delType . delArrays ';'  (77)
+	delFn : delType . ID '(' delFnParams ')'  (94)
+	delFn : delType . '*' ID '(' delFnParams ')'  (95)
+
+	ID  shift 29
+	'*'  shift 30
+	.  error
+
+	delScalars  goto 31
+	delScalar  goto 32
+	delArrays  goto 33
+	delArray  goto 34
+
+
+state 13
+	delType : delLongShort . INT  (45)
+	delType : delLongShort .  (53)
+
+	INT  shift 35
+	ID  reduce 53
+	','  reduce 53
+	'*'  reduce 53
+	')'  reduce 53
+
+
+state 14
+	programComp : delVarsScalar .  (3)
+
+	.  reduce 3
+
+
+state 15
+	programComp : delVarsArray .  (4)
+
+	.  reduce 4
+
+
+state 16
+	programComp : delFn . ';'  (5)
+	programComp : delFn . compoundStmt  (6)
+
+	';'  shift 36
+	'{'  shift 37
+	.  error
+
+	compoundStmt  goto 38
+
+
+state 17
+	delType : CONST SIGNED_UNSIGNED . INT  (50)
+	delType : CONST SIGNED_UNSIGNED . delLongShort INT  (51)
+	delType : CONST SIGNED_UNSIGNED . CHAR  (58)
+	delType : CONST SIGNED_UNSIGNED . delLongShort  (59)
+	delType : CONST SIGNED_UNSIGNED .  (64)
+
+	LONG  shift 3
+	SHORT  shift 4
+	INT  shift 39
+	CHAR  shift 40
+	ID  reduce 64
+	','  reduce 64
+	'*'  reduce 64
+	')'  reduce 64
+
+	delLongShort  goto 41
+
+
+state 18
+	delType : CONST INT .  (48)
+
+	.  reduce 48
+
+
+state 19
+	delType : CONST CHAR .  (56)
+
+	.  reduce 56
+
+
+state 20
+	delType : CONST FLOAT .  (65)
+
+	.  reduce 65
+
+
+state 21
+	delType : CONST DOUBLE .  (66)
+
+	.  reduce 66
+
+
+state 22
+	delType : CONST VOID .  (67)
+
+	.  reduce 67
+
+
+state 23
+	delType : CONST delLongShort . INT  (49)
+	delType : CONST delLongShort .  (57)
+
+	INT  shift 42
+	ID  reduce 57
+	','  reduce 57
+	'*'  reduce 57
+	')'  reduce 57
+
+
+state 24
+	delType : SIGNED_UNSIGNED INT .  (46)
+
+	.  reduce 46
+
+
+state 25
+	delType : SIGNED_UNSIGNED CHAR .  (54)
+
+	.  reduce 54
+
+
+state 26
+	delType : SIGNED_UNSIGNED delLongShort . INT  (47)
+	delType : SIGNED_UNSIGNED delLongShort .  (55)
+
+	INT  shift 43
+	ID  reduce 55
+	','  reduce 55
+	'*'  reduce 55
+	')'  reduce 55
+
+
+state 27
+	delLongShort : LONG LONG .  (70)
+
+	.  reduce 70
+
+
+state 28
+	program : program programComp .  (2)
+
+	.  reduce 2
+
+
+state 29
+	delScalar : ID .  (80)
+	delScalar : ID . '=' expr  (81)
+	delArray : ID . delArrayDims  (86)
+	delArray : ID . delArrayDims '=' '{' arrayContents '}'  (87)
+	delFn : delType ID . '(' delFnParams ')'  (94)
+
+	'='  shift 44
+	'('  shift 45
+	'['  shift 46
+	';'  reduce 80
+	','  reduce 80
+
+	delArrayDims  goto 47
+
+
+state 30
+	delScalar : '*' . ID  (82)
+	delScalar : '*' . ID '=' expr  (83)
+	delFn : delType '*' . ID '(' delFnParams ')'  (95)
+
+	ID  shift 48
+	.  error
+
+
+state 31
+	delVarsScalar : delType delScalars . ';'  (76)
+	delScalars : delScalars . ',' delScalar  (79)
+
+	';'  shift 49
+	','  shift 50
+	.  error
+
+
+state 32
+	delScalars : delScalar .  (78)
+
+	.  reduce 78
+
+
+state 33
+	delVarsArray : delType delArrays . ';'  (77)
+	delArrays : delArrays . ',' delArray  (85)
+
+	';'  shift 51
+	','  shift 52
+	.  error
+
+
+state 34
+	delArrays : delArray .  (84)
+
+	.  reduce 84
+
+
+state 35
+	delType : delLongShort INT .  (45)
+
+	.  reduce 45
+
+
+state 36
+	programComp : delFn ';' .  (5)
+
+	.  reduce 5
+
+
+state 37
+	compoundStmt : '{' . stmts '}'  (133)
+	stmts : .  (104)
+
+	.  reduce 104
+
+	stmts  goto 53
+
+
+state 38
+	programComp : delFn compoundStmt .  (6)
+
+	.  reduce 6
+
+
+state 39
+	delType : CONST SIGNED_UNSIGNED INT .  (50)
+
+	.  reduce 50
+
+
+state 40
+	delType : CONST SIGNED_UNSIGNED CHAR .  (58)
+
+	.  reduce 58
+
+
+state 41
+	delType : CONST SIGNED_UNSIGNED delLongShort . INT  (51)
+	delType : CONST SIGNED_UNSIGNED delLongShort .  (59)
+
+	INT  shift 54
+	ID  reduce 59
+	','  reduce 59
+	'*'  reduce 59
+	')'  reduce 59
+
+
+state 42
+	delType : CONST delLongShort INT .  (49)
+
+	.  reduce 49
+
+
+state 43
+	delType : SIGNED_UNSIGNED delLongShort INT .  (47)
+
+	.  reduce 47
+
+
+state 44
+	delScalar : ID '=' . expr  (81)
+
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	.  error
+
+	const  goto 68
+	expr  goto 69
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 45
+	delFn : delType ID '(' . delFnParams ')'  (94)
+	delFnParams : .  (98)
+
+	CONST  shift 1
+	SIGNED_UNSIGNED  shift 2
+	LONG  shift 3
+	SHORT  shift 4
+	INT  shift 5
+	CHAR  shift 6
+	FLOAT  shift 7
+	DOUBLE  shift 8
+	VOID  shift 9
+	','  reduce 98
+	')'  reduce 98
+
+	delType  goto 73
+	delLongShort  goto 13
+	delFnParams  goto 74
+	delFnParam  goto 75
+
+
+state 46
+	delArrayDims : '[' . expr ']'  (88)
+
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	.  error
+
+	const  goto 68
+	expr  goto 76
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 47
+	delArray : ID delArrayDims .  (86)
+	delArray : ID delArrayDims . '=' '{' arrayContents '}'  (87)
+	delArrayDims : delArrayDims . '[' expr ']'  (89)
+
+	'='  shift 77
+	'['  shift 78
+	';'  reduce 86
+	','  reduce 86
+
+
+state 48
+	delScalar : '*' ID .  (82)
+	delScalar : '*' ID . '=' expr  (83)
+	delFn : delType '*' ID . '(' delFnParams ')'  (95)
+
+	'='  shift 79
+	'('  shift 80
+	';'  reduce 82
+	','  reduce 82
+
+
+state 49
+	delVarsScalar : delType delScalars ';' .  (76)
+
+	.  reduce 76
+
+
+state 50
+	delScalars : delScalars ',' . delScalar  (79)
+
+	ID  shift 81
+	'*'  shift 82
+	.  error
+
+	delScalar  goto 83
+
+
+state 51
+	delVarsArray : delType delArrays ';' .  (77)
+
+	.  reduce 77
+
+
+state 52
+	delArrays : delArrays ',' . delArray  (85)
+
+	ID  shift 84
+	.  error
+
+	delArray  goto 85
+
+
+state 53
+	stmts : stmts . stmt  (103)
+	compoundStmt : '{' stmts . '}'  (133)
+
+	CONST  shift 1
+	SIGNED_UNSIGNED  shift 2
+	LONG  shift 3
+	SHORT  shift 4
+	INT  shift 5
+	CHAR  shift 6
+	FLOAT  shift 7
+	DOUBLE  shift 8
+	VOID  shift 9
+	IF  shift 86
+	SWITCH  shift 87
+	WHILE  shift 88
+	DO  shift 89
+	FOR  shift 90
+	RETURN  shift 91
+	BREAK  shift 92
+	CONTINUE  shift 93
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	'{'  shift 37
+	'}'  shift 94
+	.  error
+
+	stmt  goto 95
+	ifElseStmt  goto 96
+	switchStmt  goto 97
+	whileStmt  goto 98
+	forStmt  goto 99
+	returnStmt  goto 100
+	breakStmt  goto 101
+	continueStmt  goto 102
+	compoundStmt  goto 103
+	delType  goto 104
+	delLongShort  goto 13
+	const  goto 68
+	delVarsScalar  goto 105
+	delVarsArray  goto 106
+	expr  goto 107
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 54
+	delType : CONST SIGNED_UNSIGNED delLongShort INT .  (51)
+
+	.  reduce 51
+
+
+state 55
+	mutable : ID .  (38)
+	mutable : ID . delArrayDims  (39)
+
+	'['  shift 46
+	MEMBER  reduce 38
+	INCDEC  reduce 38
+	BITSHIFT  reduce 38
+	RELATION  reduce 38
+	EQNEQ  reduce 38
+	LOGICALAND  reduce 38
+	LOGICALOR  reduce 38
+	ASSIGNMENT  reduce 38
+	';'  reduce 38
+	','  reduce 38
+	'='  reduce 38
+	'|'  reduce 38
+	'^'  reduce 38
+	'&'  reduce 38
+	'+'  reduce 38
+	'-'  reduce 38
+	'*'  reduce 38
+	'/'  reduce 38
+	'%'  reduce 38
+	'('  reduce 38
+	')'  reduce 38
+	']'  reduce 38
+	'}'  reduce 38
+	':'  reduce 38
+
+	delArrayDims  goto 108
+
+
+state 56
+	const : CONST_INT .  (72)
+
+	.  reduce 72
+
+
+state 57
+	const : CONST_FLOAT .  (73)
+
+	.  reduce 73
+
+
+state 58
+	const : CONST_CHAR .  (74)
+
+	.  reduce 74
+
+
+state 59
+	const : CONST_STRING .  (75)
+
+	.  reduce 75
+
+
+state 60
+	expr : INCDEC . expr  (28)
+
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	.  error
+
+	const  goto 68
+	expr  goto 109
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 61
+	expr : '&' . expr  (24)
+
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	.  error
+
+	const  goto 68
+	expr  goto 110
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 62
+	expr : '+' . expr  (22)
+
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	.  error
+
+	const  goto 68
+	expr  goto 111
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 63
+	expr : '-' . expr  (23)
+
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	.  error
+
+	const  goto 68
+	expr  goto 112
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 64
+	expr : '*' . expr  (25)
+
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	.  error
+
+	const  goto 68
+	expr  goto 113
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 65
+	expr : '!' . expr  (26)
+
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	.  error
+
+	const  goto 68
+	expr  goto 114
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 66
+	expr : '~' . expr  (27)
+
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	.  error
+
+	const  goto 68
+	expr  goto 115
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 67
+	expr : '(' . expr ')'  (7)
+	expr : '(' . delType ')' expr  (32)
+
+	CONST  shift 1
+	SIGNED_UNSIGNED  shift 2
+	LONG  shift 3
+	SHORT  shift 4
+	INT  shift 5
+	CHAR  shift 6
+	FLOAT  shift 7
+	DOUBLE  shift 8
+	VOID  shift 9
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	.  error
+
+	delType  goto 116
+	delLongShort  goto 13
+	const  goto 68
+	expr  goto 117
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 68
+	immutable : const .  (40)
+
+	.  reduce 40
+
+
+state 69
+	expr : expr . assignment expr  (8)
+	expr : expr . '+' expr  (9)
+	expr : expr . '-' expr  (10)
+	expr : expr . '*' expr  (11)
+	expr : expr . '/' expr  (12)
+	expr : expr . '%' expr  (13)
+	expr : expr . '|' expr  (14)
+	expr : expr . '&' expr  (15)
+	expr : expr . '^' expr  (16)
+	expr : expr . LOGICALOR expr  (17)
+	expr : expr . LOGICALAND expr  (18)
+	expr : expr . EQNEQ expr  (19)
+	expr : expr . RELATION expr  (20)
+	expr : expr . BITSHIFT expr  (21)
+	expr : expr . INCDEC  (29)
+	expr : expr . '(' args ')'  (31)
+	expr : expr . MEMBER ID  (33)
+	delScalar : ID '=' expr .  (81)
+
+	MEMBER  shift 118
+	INCDEC  shift 119
+	BITSHIFT  shift 120
+	RELATION  shift 121
+	EQNEQ  shift 122
+	LOGICALAND  shift 123
+	LOGICALOR  shift 124
+	ASSIGNMENT  shift 125
+	'='  shift 126
+	'|'  shift 127
+	'^'  shift 128
+	'&'  shift 129
+	'+'  shift 130
+	'-'  shift 131
+	'*'  shift 132
+	'/'  shift 133
+	'%'  shift 134
+	'('  shift 135
+	';'  reduce 81
+	','  reduce 81
+
+	assignment  goto 136
+
+
+state 70
+	expr : factor .  (30)
+
+	.  reduce 30
+
+
+state 71
+	factor : mutable .  (36)
+
+	.  reduce 36
+
+
+state 72
+	factor : immutable .  (37)
+
+	.  reduce 37
+
+
+state 73
+	delFnParam : delType .  (99)
+	delFnParam : delType . '*'  (100)
+	delFnParam : delType . ID  (101)
+	delFnParam : delType . '*' ID  (102)
+
+	ID  shift 137
+	'*'  shift 138
+	','  reduce 99
+	')'  reduce 99
+
+
+state 74
+	delFn : delType ID '(' delFnParams . ')'  (94)
+	delFnParams : delFnParams . ',' delFnParam  (97)
+
+	','  shift 139
+	')'  shift 140
+	.  error
+
+
+state 75
+	delFnParams : delFnParam .  (96)
+
+	.  reduce 96
+
+
+state 76
+	expr : expr . assignment expr  (8)
+	expr : expr . '+' expr  (9)
+	expr : expr . '-' expr  (10)
+	expr : expr . '*' expr  (11)
+	expr : expr . '/' expr  (12)
+	expr : expr . '%' expr  (13)
+	expr : expr . '|' expr  (14)
+	expr : expr . '&' expr  (15)
+	expr : expr . '^' expr  (16)
+	expr : expr . LOGICALOR expr  (17)
+	expr : expr . LOGICALAND expr  (18)
+	expr : expr . EQNEQ expr  (19)
+	expr : expr . RELATION expr  (20)
+	expr : expr . BITSHIFT expr  (21)
+	expr : expr . INCDEC  (29)
+	expr : expr . '(' args ')'  (31)
+	expr : expr . MEMBER ID  (33)
+	delArrayDims : '[' expr . ']'  (88)
+
+	MEMBER  shift 118
+	INCDEC  shift 119
+	BITSHIFT  shift 120
+	RELATION  shift 121
+	EQNEQ  shift 122
+	LOGICALAND  shift 123
+	LOGICALOR  shift 124
+	ASSIGNMENT  shift 125
+	'='  shift 126
+	'|'  shift 127
+	'^'  shift 128
+	'&'  shift 129
+	'+'  shift 130
+	'-'  shift 131
+	'*'  shift 132
+	'/'  shift 133
+	'%'  shift 134
+	'('  shift 135
+	']'  shift 141
+	.  error
+
+	assignment  goto 136
+
+
+state 77
+	delArray : ID delArrayDims '=' . '{' arrayContents '}'  (87)
+
+	'{'  shift 142
+	.  error
+
+
+state 78
+	delArrayDims : delArrayDims '[' . expr ']'  (89)
+
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	.  error
+
+	const  goto 68
+	expr  goto 143
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 79
+	delScalar : '*' ID '=' . expr  (83)
+
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	.  error
+
+	const  goto 68
+	expr  goto 144
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 80
+	delFn : delType '*' ID '(' . delFnParams ')'  (95)
+	delFnParams : .  (98)
+
+	CONST  shift 1
+	SIGNED_UNSIGNED  shift 2
+	LONG  shift 3
+	SHORT  shift 4
+	INT  shift 5
+	CHAR  shift 6
+	FLOAT  shift 7
+	DOUBLE  shift 8
+	VOID  shift 9
+	','  reduce 98
+	')'  reduce 98
+
+	delType  goto 73
+	delLongShort  goto 13
+	delFnParams  goto 145
+	delFnParam  goto 75
+
+
+state 81
+	delScalar : ID .  (80)
+	delScalar : ID . '=' expr  (81)
+
+	'='  shift 44
+	';'  reduce 80
+	','  reduce 80
+
+
+state 82
+	delScalar : '*' . ID  (82)
+	delScalar : '*' . ID '=' expr  (83)
+
+	ID  shift 146
+	.  error
+
+
+state 83
+	delScalars : delScalars ',' delScalar .  (79)
+
+	.  reduce 79
+
+
+state 84
+	delArray : ID . delArrayDims  (86)
+	delArray : ID . delArrayDims '=' '{' arrayContents '}'  (87)
+
+	'['  shift 46
+	.  error
+
+	delArrayDims  goto 47
+
+
+state 85
+	delArrays : delArrays ',' delArray .  (85)
+
+	.  reduce 85
+
+
+state 86
+	ifElseStmt : IF . '(' expr ')' compoundStmt  (116)
+	ifElseStmt : IF . '(' expr ')' compoundStmt ELSE compoundStmt  (117)
+
+	'('  shift 147
+	.  error
+
+
+state 87
+	switchStmt : SWITCH . '(' expr ')' '{' switchClauses '}'  (118)
+	switchStmt : SWITCH . '(' expr ')' '{' '}'  (119)
+
+	'('  shift 148
+	.  error
+
+
+state 88
+	whileStmt : WHILE . '(' expr ')' stmt  (124)
+
+	'('  shift 149
+	.  error
+
+
+state 89
+	whileStmt : DO . stmt WHILE '(' expr ')' ';'  (125)
+
+	CONST  shift 1
+	SIGNED_UNSIGNED  shift 2
+	LONG  shift 3
+	SHORT  shift 4
+	INT  shift 5
+	CHAR  shift 6
+	FLOAT  shift 7
+	DOUBLE  shift 8
+	VOID  shift 9
+	IF  shift 86
+	SWITCH  shift 87
+	WHILE  shift 88
+	DO  shift 89
+	FOR  shift 90
+	RETURN  shift 91
+	BREAK  shift 92
+	CONTINUE  shift 93
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	'{'  shift 37
+	.  error
+
+	stmt  goto 150
+	ifElseStmt  goto 96
+	switchStmt  goto 97
+	whileStmt  goto 98
+	forStmt  goto 99
+	returnStmt  goto 100
+	breakStmt  goto 101
+	continueStmt  goto 102
+	compoundStmt  goto 103
+	delType  goto 104
+	delLongShort  goto 13
+	const  goto 68
+	delVarsScalar  goto 105
+	delVarsArray  goto 106
+	expr  goto 107
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 90
+	forStmt : FOR . '(' forExpr ';' forExpr ';' forExpr ')' stmt  (126)
+
+	'('  shift 151
+	.  error
+
+
+state 91
+	returnStmt : RETURN . expr ';'  (129)
+	returnStmt : RETURN . ';'  (130)
+
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	';'  shift 152
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	.  error
+
+	const  goto 68
+	expr  goto 153
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 92
+	breakStmt : BREAK . ';'  (131)
+
+	';'  shift 154
+	.  error
+
+
+state 93
+	continueStmt : CONTINUE . ';'  (132)
+
+	';'  shift 155
+	.  error
+
+
+state 94
+	compoundStmt : '{' stmts '}' .  (133)
+
+	.  reduce 133
+
+
+state 95
+	stmts : stmts stmt .  (103)
+
+	.  reduce 103
+
+
+state 96
+	stmt : ifElseStmt .  (106)
+
+	.  reduce 106
+
+
+state 97
+	stmt : switchStmt .  (107)
+
+	.  reduce 107
+
+
+state 98
+	stmt : whileStmt .  (108)
+
+	.  reduce 108
+
+
+state 99
+	stmt : forStmt .  (109)
+
+	.  reduce 109
+
+
+state 100
+	stmt : returnStmt .  (110)
+
+	.  reduce 110
+
+
+state 101
+	stmt : breakStmt .  (111)
+
+	.  reduce 111
+
+
+state 102
+	stmt : continueStmt .  (112)
+
+	.  reduce 112
+
+
+state 103
+	stmt : compoundStmt .  (113)
+
+	.  reduce 113
+
+
+state 104
+	delVarsScalar : delType . delScalars ';'  (76)
+	delVarsArray : delType . delArrays ';'  (77)
+
+	ID  shift 156
+	'*'  shift 82
+	.  error
+
+	delScalars  goto 31
+	delScalar  goto 32
+	delArrays  goto 33
+	delArray  goto 34
+
+
+state 105
+	stmt : delVarsScalar .  (114)
+
+	.  reduce 114
+
+
+state 106
+	stmt : delVarsArray .  (115)
+
+	.  reduce 115
+
+
+state 107
+	expr : expr . assignment expr  (8)
+	expr : expr . '+' expr  (9)
+	expr : expr . '-' expr  (10)
+	expr : expr . '*' expr  (11)
+	expr : expr . '/' expr  (12)
+	expr : expr . '%' expr  (13)
+	expr : expr . '|' expr  (14)
+	expr : expr . '&' expr  (15)
+	expr : expr . '^' expr  (16)
+	expr : expr . LOGICALOR expr  (17)
+	expr : expr . LOGICALAND expr  (18)
+	expr : expr . EQNEQ expr  (19)
+	expr : expr . RELATION expr  (20)
+	expr : expr . BITSHIFT expr  (21)
+	expr : expr . INCDEC  (29)
+	expr : expr . '(' args ')'  (31)
+	expr : expr . MEMBER ID  (33)
+	stmt : expr . ';'  (105)
+
+	MEMBER  shift 118
+	INCDEC  shift 119
+	BITSHIFT  shift 120
+	RELATION  shift 121
+	EQNEQ  shift 122
+	LOGICALAND  shift 123
+	LOGICALOR  shift 124
+	ASSIGNMENT  shift 125
+	';'  shift 157
+	'='  shift 126
+	'|'  shift 127
+	'^'  shift 128
+	'&'  shift 129
+	'+'  shift 130
+	'-'  shift 131
+	'*'  shift 132
+	'/'  shift 133
+	'%'  shift 134
+	'('  shift 135
+	.  error
+
+	assignment  goto 136
+
+
+state 108
+	mutable : ID delArrayDims .  (39)
+	delArrayDims : delArrayDims . '[' expr ']'  (89)
+
+	'['  shift 78
+	MEMBER  reduce 39
+	INCDEC  reduce 39
+	BITSHIFT  reduce 39
+	RELATION  reduce 39
+	EQNEQ  reduce 39
+	LOGICALAND  reduce 39
+	LOGICALOR  reduce 39
+	ASSIGNMENT  reduce 39
+	';'  reduce 39
+	','  reduce 39
+	'='  reduce 39
+	'|'  reduce 39
+	'^'  reduce 39
+	'&'  reduce 39
+	'+'  reduce 39
+	'-'  reduce 39
+	'*'  reduce 39
+	'/'  reduce 39
+	'%'  reduce 39
+	'('  reduce 39
+	')'  reduce 39
+	']'  reduce 39
+	'}'  reduce 39
+	':'  reduce 39
+
+
+state 109
+	expr : expr . assignment expr  (8)
+	expr : expr . '+' expr  (9)
+	expr : expr . '-' expr  (10)
+	expr : expr . '*' expr  (11)
+	expr : expr . '/' expr  (12)
+	expr : expr . '%' expr  (13)
+	expr : expr . '|' expr  (14)
+	expr : expr . '&' expr  (15)
+	expr : expr . '^' expr  (16)
+	expr : expr . LOGICALOR expr  (17)
+	expr : expr . LOGICALAND expr  (18)
+	expr : expr . EQNEQ expr  (19)
+	expr : expr . RELATION expr  (20)
+	expr : expr . BITSHIFT expr  (21)
+	expr : INCDEC expr .  (28)
+	expr : expr . INCDEC  (29)
+	expr : expr . '(' args ')'  (31)
+	expr : expr . MEMBER ID  (33)
+
+	MEMBER  shift 118
+	INCDEC  shift 119
+	'('  shift 135
+	BITSHIFT  reduce 28
+	RELATION  reduce 28
+	EQNEQ  reduce 28
+	LOGICALAND  reduce 28
+	LOGICALOR  reduce 28
+	ASSIGNMENT  reduce 28
+	';'  reduce 28
+	','  reduce 28
+	'='  reduce 28
+	'|'  reduce 28
+	'^'  reduce 28
+	'&'  reduce 28
+	'+'  reduce 28
+	'-'  reduce 28
+	'*'  reduce 28
+	'/'  reduce 28
+	'%'  reduce 28
+	')'  reduce 28
+	']'  reduce 28
+	'}'  reduce 28
+	':'  reduce 28
+
+	assignment  goto 136
+
+
+state 110
+	expr : expr . assignment expr  (8)
+	expr : expr . '+' expr  (9)
+	expr : expr . '-' expr  (10)
+	expr : expr . '*' expr  (11)
+	expr : expr . '/' expr  (12)
+	expr : expr . '%' expr  (13)
+	expr : expr . '|' expr  (14)
+	expr : expr . '&' expr  (15)
+	expr : expr . '^' expr  (16)
+	expr : expr . LOGICALOR expr  (17)
+	expr : expr . LOGICALAND expr  (18)
+	expr : expr . EQNEQ expr  (19)
+	expr : expr . RELATION expr  (20)
+	expr : expr . BITSHIFT expr  (21)
+	expr : '&' expr .  (24)
+	expr : expr . INCDEC  (29)
+	expr : expr . '(' args ')'  (31)
+	expr : expr . MEMBER ID  (33)
+
+	MEMBER  shift 118
+	INCDEC  shift 119
+	'('  shift 135
+	BITSHIFT  reduce 24
+	RELATION  reduce 24
+	EQNEQ  reduce 24
+	LOGICALAND  reduce 24
+	LOGICALOR  reduce 24
+	ASSIGNMENT  reduce 24
+	';'  reduce 24
+	','  reduce 24
+	'='  reduce 24
+	'|'  reduce 24
+	'^'  reduce 24
+	'&'  reduce 24
+	'+'  reduce 24
+	'-'  reduce 24
+	'*'  reduce 24
+	'/'  reduce 24
+	'%'  reduce 24
+	')'  reduce 24
+	']'  reduce 24
+	'}'  reduce 24
+	':'  reduce 24
+
+	assignment  goto 136
+
+
+state 111
+	expr : expr . assignment expr  (8)
+	expr : expr . '+' expr  (9)
+	expr : expr . '-' expr  (10)
+	expr : expr . '*' expr  (11)
+	expr : expr . '/' expr  (12)
+	expr : expr . '%' expr  (13)
+	expr : expr . '|' expr  (14)
+	expr : expr . '&' expr  (15)
+	expr : expr . '^' expr  (16)
+	expr : expr . LOGICALOR expr  (17)
+	expr : expr . LOGICALAND expr  (18)
+	expr : expr . EQNEQ expr  (19)
+	expr : expr . RELATION expr  (20)
+	expr : expr . BITSHIFT expr  (21)
+	expr : '+' expr .  (22)
+	expr : expr . INCDEC  (29)
+	expr : expr . '(' args ')'  (31)
+	expr : expr . MEMBER ID  (33)
+
+	MEMBER  shift 118
+	INCDEC  shift 119
+	'('  shift 135
+	BITSHIFT  reduce 22
+	RELATION  reduce 22
+	EQNEQ  reduce 22
+	LOGICALAND  reduce 22
+	LOGICALOR  reduce 22
+	ASSIGNMENT  reduce 22
+	';'  reduce 22
+	','  reduce 22
+	'='  reduce 22
+	'|'  reduce 22
+	'^'  reduce 22
+	'&'  reduce 22
+	'+'  reduce 22
+	'-'  reduce 22
+	'*'  reduce 22
+	'/'  reduce 22
+	'%'  reduce 22
+	')'  reduce 22
+	']'  reduce 22
+	'}'  reduce 22
+	':'  reduce 22
+
+	assignment  goto 136
+
+
+state 112
+	expr : expr . assignment expr  (8)
+	expr : expr . '+' expr  (9)
+	expr : expr . '-' expr  (10)
+	expr : expr . '*' expr  (11)
+	expr : expr . '/' expr  (12)
+	expr : expr . '%' expr  (13)
+	expr : expr . '|' expr  (14)
+	expr : expr . '&' expr  (15)
+	expr : expr . '^' expr  (16)
+	expr : expr . LOGICALOR expr  (17)
+	expr : expr . LOGICALAND expr  (18)
+	expr : expr . EQNEQ expr  (19)
+	expr : expr . RELATION expr  (20)
+	expr : expr . BITSHIFT expr  (21)
+	expr : '-' expr .  (23)
+	expr : expr . INCDEC  (29)
+	expr : expr . '(' args ')'  (31)
+	expr : expr . MEMBER ID  (33)
+
+	MEMBER  shift 118
+	INCDEC  shift 119
+	'('  shift 135
+	BITSHIFT  reduce 23
+	RELATION  reduce 23
+	EQNEQ  reduce 23
+	LOGICALAND  reduce 23
+	LOGICALOR  reduce 23
+	ASSIGNMENT  reduce 23
+	';'  reduce 23
+	','  reduce 23
+	'='  reduce 23
+	'|'  reduce 23
+	'^'  reduce 23
+	'&'  reduce 23
+	'+'  reduce 23
+	'-'  reduce 23
+	'*'  reduce 23
+	'/'  reduce 23
+	'%'  reduce 23
+	')'  reduce 23
+	']'  reduce 23
+	'}'  reduce 23
+	':'  reduce 23
+
+	assignment  goto 136
+
+
+state 113
+	expr : expr . assignment expr  (8)
+	expr : expr . '+' expr  (9)
+	expr : expr . '-' expr  (10)
+	expr : expr . '*' expr  (11)
+	expr : expr . '/' expr  (12)
+	expr : expr . '%' expr  (13)
+	expr : expr . '|' expr  (14)
+	expr : expr . '&' expr  (15)
+	expr : expr . '^' expr  (16)
+	expr : expr . LOGICALOR expr  (17)
+	expr : expr . LOGICALAND expr  (18)
+	expr : expr . EQNEQ expr  (19)
+	expr : expr . RELATION expr  (20)
+	expr : expr . BITSHIFT expr  (21)
+	expr : '*' expr .  (25)
+	expr : expr . INCDEC  (29)
+	expr : expr . '(' args ')'  (31)
+	expr : expr . MEMBER ID  (33)
+
+	MEMBER  shift 118
+	INCDEC  shift 119
+	'('  shift 135
+	BITSHIFT  reduce 25
+	RELATION  reduce 25
+	EQNEQ  reduce 25
+	LOGICALAND  reduce 25
+	LOGICALOR  reduce 25
+	ASSIGNMENT  reduce 25
+	';'  reduce 25
+	','  reduce 25
+	'='  reduce 25
+	'|'  reduce 25
+	'^'  reduce 25
+	'&'  reduce 25
+	'+'  reduce 25
+	'-'  reduce 25
+	'*'  reduce 25
+	'/'  reduce 25
+	'%'  reduce 25
+	')'  reduce 25
+	']'  reduce 25
+	'}'  reduce 25
+	':'  reduce 25
+
+	assignment  goto 136
+
+
+state 114
+	expr : expr . assignment expr  (8)
+	expr : expr . '+' expr  (9)
+	expr : expr . '-' expr  (10)
+	expr : expr . '*' expr  (11)
+	expr : expr . '/' expr  (12)
+	expr : expr . '%' expr  (13)
+	expr : expr . '|' expr  (14)
+	expr : expr . '&' expr  (15)
+	expr : expr . '^' expr  (16)
+	expr : expr . LOGICALOR expr  (17)
+	expr : expr . LOGICALAND expr  (18)
+	expr : expr . EQNEQ expr  (19)
+	expr : expr . RELATION expr  (20)
+	expr : expr . BITSHIFT expr  (21)
+	expr : '!' expr .  (26)
+	expr : expr . INCDEC  (29)
+	expr : expr . '(' args ')'  (31)
+	expr : expr . MEMBER ID  (33)
+
+	MEMBER  shift 118
+	INCDEC  shift 119
+	'('  shift 135
+	BITSHIFT  reduce 26
+	RELATION  reduce 26
+	EQNEQ  reduce 26
+	LOGICALAND  reduce 26
+	LOGICALOR  reduce 26
+	ASSIGNMENT  reduce 26
+	';'  reduce 26
+	','  reduce 26
+	'='  reduce 26
+	'|'  reduce 26
+	'^'  reduce 26
+	'&'  reduce 26
+	'+'  reduce 26
+	'-'  reduce 26
+	'*'  reduce 26
+	'/'  reduce 26
+	'%'  reduce 26
+	')'  reduce 26
+	']'  reduce 26
+	'}'  reduce 26
+	':'  reduce 26
+
+	assignment  goto 136
+
+
+state 115
+	expr : expr . assignment expr  (8)
+	expr : expr . '+' expr  (9)
+	expr : expr . '-' expr  (10)
+	expr : expr . '*' expr  (11)
+	expr : expr . '/' expr  (12)
+	expr : expr . '%' expr  (13)
+	expr : expr . '|' expr  (14)
+	expr : expr . '&' expr  (15)
+	expr : expr . '^' expr  (16)
+	expr : expr . LOGICALOR expr  (17)
+	expr : expr . LOGICALAND expr  (18)
+	expr : expr . EQNEQ expr  (19)
+	expr : expr . RELATION expr  (20)
+	expr : expr . BITSHIFT expr  (21)
+	expr : '~' expr .  (27)
+	expr : expr . INCDEC  (29)
+	expr : expr . '(' args ')'  (31)
+	expr : expr . MEMBER ID  (33)
+
+	MEMBER  shift 118
+	INCDEC  shift 119
+	'('  shift 135
+	BITSHIFT  reduce 27
+	RELATION  reduce 27
+	EQNEQ  reduce 27
+	LOGICALAND  reduce 27
+	LOGICALOR  reduce 27
+	ASSIGNMENT  reduce 27
+	';'  reduce 27
+	','  reduce 27
+	'='  reduce 27
+	'|'  reduce 27
+	'^'  reduce 27
+	'&'  reduce 27
+	'+'  reduce 27
+	'-'  reduce 27
+	'*'  reduce 27
+	'/'  reduce 27
+	'%'  reduce 27
+	')'  reduce 27
+	']'  reduce 27
+	'}'  reduce 27
+	':'  reduce 27
+
+	assignment  goto 136
+
+
+state 116
+	expr : '(' delType . ')' expr  (32)
+
+	')'  shift 158
+	.  error
+
+
+state 117
+	expr : '(' expr . ')'  (7)
+	expr : expr . assignment expr  (8)
+	expr : expr . '+' expr  (9)
+	expr : expr . '-' expr  (10)
+	expr : expr . '*' expr  (11)
+	expr : expr . '/' expr  (12)
+	expr : expr . '%' expr  (13)
+	expr : expr . '|' expr  (14)
+	expr : expr . '&' expr  (15)
+	expr : expr . '^' expr  (16)
+	expr : expr . LOGICALOR expr  (17)
+	expr : expr . LOGICALAND expr  (18)
+	expr : expr . EQNEQ expr  (19)
+	expr : expr . RELATION expr  (20)
+	expr : expr . BITSHIFT expr  (21)
+	expr : expr . INCDEC  (29)
+	expr : expr . '(' args ')'  (31)
+	expr : expr . MEMBER ID  (33)
+
+	MEMBER  shift 118
+	INCDEC  shift 119
+	BITSHIFT  shift 120
+	RELATION  shift 121
+	EQNEQ  shift 122
+	LOGICALAND  shift 123
+	LOGICALOR  shift 124
+	ASSIGNMENT  shift 125
+	'='  shift 126
+	'|'  shift 127
+	'^'  shift 128
+	'&'  shift 129
+	'+'  shift 130
+	'-'  shift 131
+	'*'  shift 132
+	'/'  shift 133
+	'%'  shift 134
+	'('  shift 135
+	')'  shift 159
+	.  error
+
+	assignment  goto 136
+
+
+state 118
+	expr : expr MEMBER . ID  (33)
+
+	ID  shift 160
+	.  error
+
+
+state 119
+	expr : expr INCDEC .  (29)
+
+	.  reduce 29
+
+
+state 120
+	expr : expr BITSHIFT . expr  (21)
+
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	.  error
+
+	const  goto 68
+	expr  goto 161
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 121
+	expr : expr RELATION . expr  (20)
+
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	.  error
+
+	const  goto 68
+	expr  goto 162
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 122
+	expr : expr EQNEQ . expr  (19)
+
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	.  error
+
+	const  goto 68
+	expr  goto 163
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 123
+	expr : expr LOGICALAND . expr  (18)
+
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	.  error
+
+	const  goto 68
+	expr  goto 164
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 124
+	expr : expr LOGICALOR . expr  (17)
+
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	.  error
+
+	const  goto 68
+	expr  goto 165
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 125
+	assignment : ASSIGNMENT .  (35)
+
+	.  reduce 35
+
+
+state 126
+	assignment : '=' .  (34)
+
+	.  reduce 34
+
+
+state 127
+	expr : expr '|' . expr  (14)
+
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	.  error
+
+	const  goto 68
+	expr  goto 166
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 128
+	expr : expr '^' . expr  (16)
+
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	.  error
+
+	const  goto 68
+	expr  goto 167
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 129
+	expr : expr '&' . expr  (15)
+
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	.  error
+
+	const  goto 68
+	expr  goto 168
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 130
+	expr : expr '+' . expr  (9)
+
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	.  error
+
+	const  goto 68
+	expr  goto 169
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 131
+	expr : expr '-' . expr  (10)
+
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	.  error
+
+	const  goto 68
+	expr  goto 170
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 132
+	expr : expr '*' . expr  (11)
+
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	.  error
+
+	const  goto 68
+	expr  goto 171
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 133
+	expr : expr '/' . expr  (12)
+
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	.  error
+
+	const  goto 68
+	expr  goto 172
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 134
+	expr : expr '%' . expr  (13)
+
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	.  error
+
+	const  goto 68
+	expr  goto 173
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 135
+	expr : expr '(' . args ')'  (31)
+	args : .  (43)
+
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	','  reduce 43
+	')'  reduce 43
+
+	const  goto 68
+	expr  goto 174
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+	args  goto 175
+
+
+state 136
+	expr : expr assignment . expr  (8)
+
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	.  error
+
+	const  goto 68
+	expr  goto 176
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 137
+	delFnParam : delType ID .  (101)
+
+	.  reduce 101
+
+
+state 138
+	delFnParam : delType '*' .  (100)
+	delFnParam : delType '*' . ID  (102)
+
+	ID  shift 177
+	','  reduce 100
+	')'  reduce 100
+
+
+state 139
+	delFnParams : delFnParams ',' . delFnParam  (97)
+
+	CONST  shift 1
+	SIGNED_UNSIGNED  shift 2
+	LONG  shift 3
+	SHORT  shift 4
+	INT  shift 5
+	CHAR  shift 6
+	FLOAT  shift 7
+	DOUBLE  shift 8
+	VOID  shift 9
+	.  error
+
+	delType  goto 73
+	delLongShort  goto 13
+	delFnParam  goto 178
+
+
+state 140
+	delFn : delType ID '(' delFnParams ')' .  (94)
+
+	.  reduce 94
+
+
+state 141
+	delArrayDims : '[' expr ']' .  (88)
+
+	.  reduce 88
+
+
+state 142
+	delArray : ID delArrayDims '=' '{' . arrayContents '}'  (87)
+
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	'{'  shift 179
+	.  error
+
+	const  goto 68
+	arrayContents  goto 180
+	arrayContent  goto 181
+	expr  goto 182
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 143
+	expr : expr . assignment expr  (8)
+	expr : expr . '+' expr  (9)
+	expr : expr . '-' expr  (10)
+	expr : expr . '*' expr  (11)
+	expr : expr . '/' expr  (12)
+	expr : expr . '%' expr  (13)
+	expr : expr . '|' expr  (14)
+	expr : expr . '&' expr  (15)
+	expr : expr . '^' expr  (16)
+	expr : expr . LOGICALOR expr  (17)
+	expr : expr . LOGICALAND expr  (18)
+	expr : expr . EQNEQ expr  (19)
+	expr : expr . RELATION expr  (20)
+	expr : expr . BITSHIFT expr  (21)
+	expr : expr . INCDEC  (29)
+	expr : expr . '(' args ')'  (31)
+	expr : expr . MEMBER ID  (33)
+	delArrayDims : delArrayDims '[' expr . ']'  (89)
+
+	MEMBER  shift 118
+	INCDEC  shift 119
+	BITSHIFT  shift 120
+	RELATION  shift 121
+	EQNEQ  shift 122
+	LOGICALAND  shift 123
+	LOGICALOR  shift 124
+	ASSIGNMENT  shift 125
+	'='  shift 126
+	'|'  shift 127
+	'^'  shift 128
+	'&'  shift 129
+	'+'  shift 130
+	'-'  shift 131
+	'*'  shift 132
+	'/'  shift 133
+	'%'  shift 134
+	'('  shift 135
+	']'  shift 183
+	.  error
+
+	assignment  goto 136
+
+
+state 144
+	expr : expr . assignment expr  (8)
+	expr : expr . '+' expr  (9)
+	expr : expr . '-' expr  (10)
+	expr : expr . '*' expr  (11)
+	expr : expr . '/' expr  (12)
+	expr : expr . '%' expr  (13)
+	expr : expr . '|' expr  (14)
+	expr : expr . '&' expr  (15)
+	expr : expr . '^' expr  (16)
+	expr : expr . LOGICALOR expr  (17)
+	expr : expr . LOGICALAND expr  (18)
+	expr : expr . EQNEQ expr  (19)
+	expr : expr . RELATION expr  (20)
+	expr : expr . BITSHIFT expr  (21)
+	expr : expr . INCDEC  (29)
+	expr : expr . '(' args ')'  (31)
+	expr : expr . MEMBER ID  (33)
+	delScalar : '*' ID '=' expr .  (83)
+
+	MEMBER  shift 118
+	INCDEC  shift 119
+	BITSHIFT  shift 120
+	RELATION  shift 121
+	EQNEQ  shift 122
+	LOGICALAND  shift 123
+	LOGICALOR  shift 124
+	ASSIGNMENT  shift 125
+	'='  shift 126
+	'|'  shift 127
+	'^'  shift 128
+	'&'  shift 129
+	'+'  shift 130
+	'-'  shift 131
+	'*'  shift 132
+	'/'  shift 133
+	'%'  shift 134
+	'('  shift 135
+	';'  reduce 83
+	','  reduce 83
+
+	assignment  goto 136
+
+
+state 145
+	delFn : delType '*' ID '(' delFnParams . ')'  (95)
+	delFnParams : delFnParams . ',' delFnParam  (97)
+
+	','  shift 139
+	')'  shift 184
+	.  error
+
+
+state 146
+	delScalar : '*' ID .  (82)
+	delScalar : '*' ID . '=' expr  (83)
+
+	'='  shift 79
+	';'  reduce 82
+	','  reduce 82
+
+
+state 147
+	ifElseStmt : IF '(' . expr ')' compoundStmt  (116)
+	ifElseStmt : IF '(' . expr ')' compoundStmt ELSE compoundStmt  (117)
+
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	.  error
+
+	const  goto 68
+	expr  goto 185
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 148
+	switchStmt : SWITCH '(' . expr ')' '{' switchClauses '}'  (118)
+	switchStmt : SWITCH '(' . expr ')' '{' '}'  (119)
+
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	.  error
+
+	const  goto 68
+	expr  goto 186
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 149
+	whileStmt : WHILE '(' . expr ')' stmt  (124)
+
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	.  error
+
+	const  goto 68
+	expr  goto 187
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 150
+	whileStmt : DO stmt . WHILE '(' expr ')' ';'  (125)
+
+	WHILE  shift 188
+	.  error
+
+
+state 151
+	forStmt : FOR '(' . forExpr ';' forExpr ';' forExpr ')' stmt  (126)
+	forExpr : .  (128)
+
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	';'  reduce 128
+
+	forExpr  goto 189
+	const  goto 68
+	expr  goto 190
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 152
+	returnStmt : RETURN ';' .  (130)
+
+	.  reduce 130
+
+
+state 153
+	expr : expr . assignment expr  (8)
+	expr : expr . '+' expr  (9)
+	expr : expr . '-' expr  (10)
+	expr : expr . '*' expr  (11)
+	expr : expr . '/' expr  (12)
+	expr : expr . '%' expr  (13)
+	expr : expr . '|' expr  (14)
+	expr : expr . '&' expr  (15)
+	expr : expr . '^' expr  (16)
+	expr : expr . LOGICALOR expr  (17)
+	expr : expr . LOGICALAND expr  (18)
+	expr : expr . EQNEQ expr  (19)
+	expr : expr . RELATION expr  (20)
+	expr : expr . BITSHIFT expr  (21)
+	expr : expr . INCDEC  (29)
+	expr : expr . '(' args ')'  (31)
+	expr : expr . MEMBER ID  (33)
+	returnStmt : RETURN expr . ';'  (129)
+
+	MEMBER  shift 118
+	INCDEC  shift 119
+	BITSHIFT  shift 120
+	RELATION  shift 121
+	EQNEQ  shift 122
+	LOGICALAND  shift 123
+	LOGICALOR  shift 124
+	ASSIGNMENT  shift 125
+	';'  shift 191
+	'='  shift 126
+	'|'  shift 127
+	'^'  shift 128
+	'&'  shift 129
+	'+'  shift 130
+	'-'  shift 131
+	'*'  shift 132
+	'/'  shift 133
+	'%'  shift 134
+	'('  shift 135
+	.  error
+
+	assignment  goto 136
+
+
+state 154
+	breakStmt : BREAK ';' .  (131)
+
+	.  reduce 131
+
+
+state 155
+	continueStmt : CONTINUE ';' .  (132)
+
+	.  reduce 132
+
+
+state 156
+	delScalar : ID .  (80)
+	delScalar : ID . '=' expr  (81)
+	delArray : ID . delArrayDims  (86)
+	delArray : ID . delArrayDims '=' '{' arrayContents '}'  (87)
+
+	'='  shift 44
+	'['  shift 46
+	';'  reduce 80
+	','  reduce 80
+
+	delArrayDims  goto 47
+
+
+state 157
+	stmt : expr ';' .  (105)
+
+	.  reduce 105
+
+
+state 158
+	expr : '(' delType ')' . expr  (32)
+
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	.  error
+
+	const  goto 68
+	expr  goto 192
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 159
+	expr : '(' expr ')' .  (7)
+
+	.  reduce 7
+
+
+state 160
+	expr : expr MEMBER ID .  (33)
+
+	.  reduce 33
+
+
+state 161
+	expr : expr . assignment expr  (8)
+	expr : expr . '+' expr  (9)
+	expr : expr . '-' expr  (10)
+	expr : expr . '*' expr  (11)
+	expr : expr . '/' expr  (12)
+	expr : expr . '%' expr  (13)
+	expr : expr . '|' expr  (14)
+	expr : expr . '&' expr  (15)
+	expr : expr . '^' expr  (16)
+	expr : expr . LOGICALOR expr  (17)
+	expr : expr . LOGICALAND expr  (18)
+	expr : expr . EQNEQ expr  (19)
+	expr : expr . RELATION expr  (20)
+	expr : expr . BITSHIFT expr  (21)
+	expr : expr BITSHIFT expr .  (21)
+	expr : expr . INCDEC  (29)
+	expr : expr . '(' args ')'  (31)
+	expr : expr . MEMBER ID  (33)
+
+	MEMBER  shift 118
+	INCDEC  shift 119
+	'+'  shift 130
+	'-'  shift 131
+	'*'  shift 132
+	'/'  shift 133
+	'%'  shift 134
+	'('  shift 135
+	BITSHIFT  reduce 21
+	RELATION  reduce 21
+	EQNEQ  reduce 21
+	LOGICALAND  reduce 21
+	LOGICALOR  reduce 21
+	ASSIGNMENT  reduce 21
+	';'  reduce 21
+	','  reduce 21
+	'='  reduce 21
+	'|'  reduce 21
+	'^'  reduce 21
+	'&'  reduce 21
+	')'  reduce 21
+	']'  reduce 21
+	'}'  reduce 21
+	':'  reduce 21
+
+	assignment  goto 136
+
+
+state 162
+	expr : expr . assignment expr  (8)
+	expr : expr . '+' expr  (9)
+	expr : expr . '-' expr  (10)
+	expr : expr . '*' expr  (11)
+	expr : expr . '/' expr  (12)
+	expr : expr . '%' expr  (13)
+	expr : expr . '|' expr  (14)
+	expr : expr . '&' expr  (15)
+	expr : expr . '^' expr  (16)
+	expr : expr . LOGICALOR expr  (17)
+	expr : expr . LOGICALAND expr  (18)
+	expr : expr . EQNEQ expr  (19)
+	expr : expr . RELATION expr  (20)
+	expr : expr RELATION expr .  (20)
+	expr : expr . BITSHIFT expr  (21)
+	expr : expr . INCDEC  (29)
+	expr : expr . '(' args ')'  (31)
+	expr : expr . MEMBER ID  (33)
+
+	MEMBER  shift 118
+	INCDEC  shift 119
+	BITSHIFT  shift 120
+	'+'  shift 130
+	'-'  shift 131
+	'*'  shift 132
+	'/'  shift 133
+	'%'  shift 134
+	'('  shift 135
+	RELATION  reduce 20
+	EQNEQ  reduce 20
+	LOGICALAND  reduce 20
+	LOGICALOR  reduce 20
+	ASSIGNMENT  reduce 20
+	';'  reduce 20
+	','  reduce 20
+	'='  reduce 20
+	'|'  reduce 20
+	'^'  reduce 20
+	'&'  reduce 20
+	')'  reduce 20
+	']'  reduce 20
+	'}'  reduce 20
+	':'  reduce 20
+
+	assignment  goto 136
+
+
+state 163
+	expr : expr . assignment expr  (8)
+	expr : expr . '+' expr  (9)
+	expr : expr . '-' expr  (10)
+	expr : expr . '*' expr  (11)
+	expr : expr . '/' expr  (12)
+	expr : expr . '%' expr  (13)
+	expr : expr . '|' expr  (14)
+	expr : expr . '&' expr  (15)
+	expr : expr . '^' expr  (16)
+	expr : expr . LOGICALOR expr  (17)
+	expr : expr . LOGICALAND expr  (18)
+	expr : expr . EQNEQ expr  (19)
+	expr : expr EQNEQ expr .  (19)
+	expr : expr . RELATION expr  (20)
+	expr : expr . BITSHIFT expr  (21)
+	expr : expr . INCDEC  (29)
+	expr : expr . '(' args ')'  (31)
+	expr : expr . MEMBER ID  (33)
+
+	MEMBER  shift 118
+	INCDEC  shift 119
+	BITSHIFT  shift 120
+	RELATION  shift 121
+	'+'  shift 130
+	'-'  shift 131
+	'*'  shift 132
+	'/'  shift 133
+	'%'  shift 134
+	'('  shift 135
+	EQNEQ  reduce 19
+	LOGICALAND  reduce 19
+	LOGICALOR  reduce 19
+	ASSIGNMENT  reduce 19
+	';'  reduce 19
+	','  reduce 19
+	'='  reduce 19
+	'|'  reduce 19
+	'^'  reduce 19
+	'&'  reduce 19
+	')'  reduce 19
+	']'  reduce 19
+	'}'  reduce 19
+	':'  reduce 19
+
+	assignment  goto 136
+
+
+state 164
+	expr : expr . assignment expr  (8)
+	expr : expr . '+' expr  (9)
+	expr : expr . '-' expr  (10)
+	expr : expr . '*' expr  (11)
+	expr : expr . '/' expr  (12)
+	expr : expr . '%' expr  (13)
+	expr : expr . '|' expr  (14)
+	expr : expr . '&' expr  (15)
+	expr : expr . '^' expr  (16)
+	expr : expr . LOGICALOR expr  (17)
+	expr : expr . LOGICALAND expr  (18)
+	expr : expr LOGICALAND expr .  (18)
+	expr : expr . EQNEQ expr  (19)
+	expr : expr . RELATION expr  (20)
+	expr : expr . BITSHIFT expr  (21)
+	expr : expr . INCDEC  (29)
+	expr : expr . '(' args ')'  (31)
+	expr : expr . MEMBER ID  (33)
+
+	MEMBER  shift 118
+	INCDEC  shift 119
+	BITSHIFT  shift 120
+	RELATION  shift 121
+	EQNEQ  shift 122
+	'|'  shift 127
+	'^'  shift 128
+	'&'  shift 129
+	'+'  shift 130
+	'-'  shift 131
+	'*'  shift 132
+	'/'  shift 133
+	'%'  shift 134
+	'('  shift 135
+	LOGICALAND  reduce 18
+	LOGICALOR  reduce 18
+	ASSIGNMENT  reduce 18
+	';'  reduce 18
+	','  reduce 18
+	'='  reduce 18
+	')'  reduce 18
+	']'  reduce 18
+	'}'  reduce 18
+	':'  reduce 18
+
+	assignment  goto 136
+
+
+state 165
+	expr : expr . assignment expr  (8)
+	expr : expr . '+' expr  (9)
+	expr : expr . '-' expr  (10)
+	expr : expr . '*' expr  (11)
+	expr : expr . '/' expr  (12)
+	expr : expr . '%' expr  (13)
+	expr : expr . '|' expr  (14)
+	expr : expr . '&' expr  (15)
+	expr : expr . '^' expr  (16)
+	expr : expr . LOGICALOR expr  (17)
+	expr : expr LOGICALOR expr .  (17)
+	expr : expr . LOGICALAND expr  (18)
+	expr : expr . EQNEQ expr  (19)
+	expr : expr . RELATION expr  (20)
+	expr : expr . BITSHIFT expr  (21)
+	expr : expr . INCDEC  (29)
+	expr : expr . '(' args ')'  (31)
+	expr : expr . MEMBER ID  (33)
+
+	MEMBER  shift 118
+	INCDEC  shift 119
+	BITSHIFT  shift 120
+	RELATION  shift 121
+	EQNEQ  shift 122
+	LOGICALAND  shift 123
+	'|'  shift 127
+	'^'  shift 128
+	'&'  shift 129
+	'+'  shift 130
+	'-'  shift 131
+	'*'  shift 132
+	'/'  shift 133
+	'%'  shift 134
+	'('  shift 135
+	LOGICALOR  reduce 17
+	ASSIGNMENT  reduce 17
+	';'  reduce 17
+	','  reduce 17
+	'='  reduce 17
+	')'  reduce 17
+	']'  reduce 17
+	'}'  reduce 17
+	':'  reduce 17
+
+	assignment  goto 136
+
+
+state 166
+	expr : expr . assignment expr  (8)
+	expr : expr . '+' expr  (9)
+	expr : expr . '-' expr  (10)
+	expr : expr . '*' expr  (11)
+	expr : expr . '/' expr  (12)
+	expr : expr . '%' expr  (13)
+	expr : expr . '|' expr  (14)
+	expr : expr '|' expr .  (14)
+	expr : expr . '&' expr  (15)
+	expr : expr . '^' expr  (16)
+	expr : expr . LOGICALOR expr  (17)
+	expr : expr . LOGICALAND expr  (18)
+	expr : expr . EQNEQ expr  (19)
+	expr : expr . RELATION expr  (20)
+	expr : expr . BITSHIFT expr  (21)
+	expr : expr . INCDEC  (29)
+	expr : expr . '(' args ')'  (31)
+	expr : expr . MEMBER ID  (33)
+
+	MEMBER  shift 118
+	INCDEC  shift 119
+	BITSHIFT  shift 120
+	RELATION  shift 121
+	EQNEQ  shift 122
+	'^'  shift 128
+	'&'  shift 129
+	'+'  shift 130
+	'-'  shift 131
+	'*'  shift 132
+	'/'  shift 133
+	'%'  shift 134
+	'('  shift 135
+	LOGICALAND  reduce 14
+	LOGICALOR  reduce 14
+	ASSIGNMENT  reduce 14
+	';'  reduce 14
+	','  reduce 14
+	'='  reduce 14
+	'|'  reduce 14
+	')'  reduce 14
+	']'  reduce 14
+	'}'  reduce 14
+	':'  reduce 14
+
+	assignment  goto 136
+
+
+state 167
+	expr : expr . assignment expr  (8)
+	expr : expr . '+' expr  (9)
+	expr : expr . '-' expr  (10)
+	expr : expr . '*' expr  (11)
+	expr : expr . '/' expr  (12)
+	expr : expr . '%' expr  (13)
+	expr : expr . '|' expr  (14)
+	expr : expr . '&' expr  (15)
+	expr : expr . '^' expr  (16)
+	expr : expr '^' expr .  (16)
+	expr : expr . LOGICALOR expr  (17)
+	expr : expr . LOGICALAND expr  (18)
+	expr : expr . EQNEQ expr  (19)
+	expr : expr . RELATION expr  (20)
+	expr : expr . BITSHIFT expr  (21)
+	expr : expr . INCDEC  (29)
+	expr : expr . '(' args ')'  (31)
+	expr : expr . MEMBER ID  (33)
+
+	MEMBER  shift 118
+	INCDEC  shift 119
+	BITSHIFT  shift 120
+	RELATION  shift 121
+	EQNEQ  shift 122
+	'&'  shift 129
+	'+'  shift 130
+	'-'  shift 131
+	'*'  shift 132
+	'/'  shift 133
+	'%'  shift 134
+	'('  shift 135
+	LOGICALAND  reduce 16
+	LOGICALOR  reduce 16
+	ASSIGNMENT  reduce 16
+	';'  reduce 16
+	','  reduce 16
+	'='  reduce 16
+	'|'  reduce 16
+	'^'  reduce 16
+	')'  reduce 16
+	']'  reduce 16
+	'}'  reduce 16
+	':'  reduce 16
+
+	assignment  goto 136
+
+
+state 168
+	expr : expr . assignment expr  (8)
+	expr : expr . '+' expr  (9)
+	expr : expr . '-' expr  (10)
+	expr : expr . '*' expr  (11)
+	expr : expr . '/' expr  (12)
+	expr : expr . '%' expr  (13)
+	expr : expr . '|' expr  (14)
+	expr : expr . '&' expr  (15)
+	expr : expr '&' expr .  (15)
+	expr : expr . '^' expr  (16)
+	expr : expr . LOGICALOR expr  (17)
+	expr : expr . LOGICALAND expr  (18)
+	expr : expr . EQNEQ expr  (19)
+	expr : expr . RELATION expr  (20)
+	expr : expr . BITSHIFT expr  (21)
+	expr : expr . INCDEC  (29)
+	expr : expr . '(' args ')'  (31)
+	expr : expr . MEMBER ID  (33)
+
+	MEMBER  shift 118
+	INCDEC  shift 119
+	BITSHIFT  shift 120
+	RELATION  shift 121
+	EQNEQ  shift 122
+	'+'  shift 130
+	'-'  shift 131
+	'*'  shift 132
+	'/'  shift 133
+	'%'  shift 134
+	'('  shift 135
+	LOGICALAND  reduce 15
+	LOGICALOR  reduce 15
+	ASSIGNMENT  reduce 15
+	';'  reduce 15
+	','  reduce 15
+	'='  reduce 15
+	'|'  reduce 15
+	'^'  reduce 15
+	'&'  reduce 15
+	')'  reduce 15
+	']'  reduce 15
+	'}'  reduce 15
+	':'  reduce 15
+
+	assignment  goto 136
+
+
+state 169
+	expr : expr . assignment expr  (8)
+	expr : expr . '+' expr  (9)
+	expr : expr '+' expr .  (9)
+	expr : expr . '-' expr  (10)
+	expr : expr . '*' expr  (11)
+	expr : expr . '/' expr  (12)
+	expr : expr . '%' expr  (13)
+	expr : expr . '|' expr  (14)
+	expr : expr . '&' expr  (15)
+	expr : expr . '^' expr  (16)
+	expr : expr . LOGICALOR expr  (17)
+	expr : expr . LOGICALAND expr  (18)
+	expr : expr . EQNEQ expr  (19)
+	expr : expr . RELATION expr  (20)
+	expr : expr . BITSHIFT expr  (21)
+	expr : expr . INCDEC  (29)
+	expr : expr . '(' args ')'  (31)
+	expr : expr . MEMBER ID  (33)
+
+	MEMBER  shift 118
+	INCDEC  shift 119
+	'*'  shift 132
+	'/'  shift 133
+	'%'  shift 134
+	'('  shift 135
+	BITSHIFT  reduce 9
+	RELATION  reduce 9
+	EQNEQ  reduce 9
+	LOGICALAND  reduce 9
+	LOGICALOR  reduce 9
+	ASSIGNMENT  reduce 9
+	';'  reduce 9
+	','  reduce 9
+	'='  reduce 9
+	'|'  reduce 9
+	'^'  reduce 9
+	'&'  reduce 9
+	'+'  reduce 9
+	'-'  reduce 9
+	')'  reduce 9
+	']'  reduce 9
+	'}'  reduce 9
+	':'  reduce 9
+
+	assignment  goto 136
+
+
+state 170
+	expr : expr . assignment expr  (8)
+	expr : expr . '+' expr  (9)
+	expr : expr . '-' expr  (10)
+	expr : expr '-' expr .  (10)
+	expr : expr . '*' expr  (11)
+	expr : expr . '/' expr  (12)
+	expr : expr . '%' expr  (13)
+	expr : expr . '|' expr  (14)
+	expr : expr . '&' expr  (15)
+	expr : expr . '^' expr  (16)
+	expr : expr . LOGICALOR expr  (17)
+	expr : expr . LOGICALAND expr  (18)
+	expr : expr . EQNEQ expr  (19)
+	expr : expr . RELATION expr  (20)
+	expr : expr . BITSHIFT expr  (21)
+	expr : expr . INCDEC  (29)
+	expr : expr . '(' args ')'  (31)
+	expr : expr . MEMBER ID  (33)
+
+	MEMBER  shift 118
+	INCDEC  shift 119
+	'*'  shift 132
+	'/'  shift 133
+	'%'  shift 134
+	'('  shift 135
+	BITSHIFT  reduce 10
+	RELATION  reduce 10
+	EQNEQ  reduce 10
+	LOGICALAND  reduce 10
+	LOGICALOR  reduce 10
+	ASSIGNMENT  reduce 10
+	';'  reduce 10
+	','  reduce 10
+	'='  reduce 10
+	'|'  reduce 10
+	'^'  reduce 10
+	'&'  reduce 10
+	'+'  reduce 10
+	'-'  reduce 10
+	')'  reduce 10
+	']'  reduce 10
+	'}'  reduce 10
+	':'  reduce 10
+
+	assignment  goto 136
+
+
+state 171
+	expr : expr . assignment expr  (8)
+	expr : expr . '+' expr  (9)
+	expr : expr . '-' expr  (10)
+	expr : expr . '*' expr  (11)
+	expr : expr '*' expr .  (11)
+	expr : expr . '/' expr  (12)
+	expr : expr . '%' expr  (13)
+	expr : expr . '|' expr  (14)
+	expr : expr . '&' expr  (15)
+	expr : expr . '^' expr  (16)
+	expr : expr . LOGICALOR expr  (17)
+	expr : expr . LOGICALAND expr  (18)
+	expr : expr . EQNEQ expr  (19)
+	expr : expr . RELATION expr  (20)
+	expr : expr . BITSHIFT expr  (21)
+	expr : expr . INCDEC  (29)
+	expr : expr . '(' args ')'  (31)
+	expr : expr . MEMBER ID  (33)
+
+	MEMBER  shift 118
+	INCDEC  shift 119
+	'('  shift 135
+	BITSHIFT  reduce 11
+	RELATION  reduce 11
+	EQNEQ  reduce 11
+	LOGICALAND  reduce 11
+	LOGICALOR  reduce 11
+	ASSIGNMENT  reduce 11
+	';'  reduce 11
+	','  reduce 11
+	'='  reduce 11
+	'|'  reduce 11
+	'^'  reduce 11
+	'&'  reduce 11
+	'+'  reduce 11
+	'-'  reduce 11
+	'*'  reduce 11
+	'/'  reduce 11
+	'%'  reduce 11
+	')'  reduce 11
+	']'  reduce 11
+	'}'  reduce 11
+	':'  reduce 11
+
+	assignment  goto 136
+
+
+state 172
+	expr : expr . assignment expr  (8)
+	expr : expr . '+' expr  (9)
+	expr : expr . '-' expr  (10)
+	expr : expr . '*' expr  (11)
+	expr : expr . '/' expr  (12)
+	expr : expr '/' expr .  (12)
+	expr : expr . '%' expr  (13)
+	expr : expr . '|' expr  (14)
+	expr : expr . '&' expr  (15)
+	expr : expr . '^' expr  (16)
+	expr : expr . LOGICALOR expr  (17)
+	expr : expr . LOGICALAND expr  (18)
+	expr : expr . EQNEQ expr  (19)
+	expr : expr . RELATION expr  (20)
+	expr : expr . BITSHIFT expr  (21)
+	expr : expr . INCDEC  (29)
+	expr : expr . '(' args ')'  (31)
+	expr : expr . MEMBER ID  (33)
+
+	MEMBER  shift 118
+	INCDEC  shift 119
+	'('  shift 135
+	BITSHIFT  reduce 12
+	RELATION  reduce 12
+	EQNEQ  reduce 12
+	LOGICALAND  reduce 12
+	LOGICALOR  reduce 12
+	ASSIGNMENT  reduce 12
+	';'  reduce 12
+	','  reduce 12
+	'='  reduce 12
+	'|'  reduce 12
+	'^'  reduce 12
+	'&'  reduce 12
+	'+'  reduce 12
+	'-'  reduce 12
+	'*'  reduce 12
+	'/'  reduce 12
+	'%'  reduce 12
+	')'  reduce 12
+	']'  reduce 12
+	'}'  reduce 12
+	':'  reduce 12
+
+	assignment  goto 136
+
+
+state 173
+	expr : expr . assignment expr  (8)
+	expr : expr . '+' expr  (9)
+	expr : expr . '-' expr  (10)
+	expr : expr . '*' expr  (11)
+	expr : expr . '/' expr  (12)
+	expr : expr . '%' expr  (13)
+	expr : expr '%' expr .  (13)
+	expr : expr . '|' expr  (14)
+	expr : expr . '&' expr  (15)
+	expr : expr . '^' expr  (16)
+	expr : expr . LOGICALOR expr  (17)
+	expr : expr . LOGICALAND expr  (18)
+	expr : expr . EQNEQ expr  (19)
+	expr : expr . RELATION expr  (20)
+	expr : expr . BITSHIFT expr  (21)
+	expr : expr . INCDEC  (29)
+	expr : expr . '(' args ')'  (31)
+	expr : expr . MEMBER ID  (33)
+
+	MEMBER  shift 118
+	INCDEC  shift 119
+	'('  shift 135
+	BITSHIFT  reduce 13
+	RELATION  reduce 13
+	EQNEQ  reduce 13
+	LOGICALAND  reduce 13
+	LOGICALOR  reduce 13
+	ASSIGNMENT  reduce 13
+	';'  reduce 13
+	','  reduce 13
+	'='  reduce 13
+	'|'  reduce 13
+	'^'  reduce 13
+	'&'  reduce 13
+	'+'  reduce 13
+	'-'  reduce 13
+	'*'  reduce 13
+	'/'  reduce 13
+	'%'  reduce 13
+	')'  reduce 13
+	']'  reduce 13
+	'}'  reduce 13
+	':'  reduce 13
+
+	assignment  goto 136
+
+
+state 174
+	expr : expr . assignment expr  (8)
+	expr : expr . '+' expr  (9)
+	expr : expr . '-' expr  (10)
+	expr : expr . '*' expr  (11)
+	expr : expr . '/' expr  (12)
+	expr : expr . '%' expr  (13)
+	expr : expr . '|' expr  (14)
+	expr : expr . '&' expr  (15)
+	expr : expr . '^' expr  (16)
+	expr : expr . LOGICALOR expr  (17)
+	expr : expr . LOGICALAND expr  (18)
+	expr : expr . EQNEQ expr  (19)
+	expr : expr . RELATION expr  (20)
+	expr : expr . BITSHIFT expr  (21)
+	expr : expr . INCDEC  (29)
+	expr : expr . '(' args ')'  (31)
+	expr : expr . MEMBER ID  (33)
+	args : expr .  (41)
+
+	MEMBER  shift 118
+	INCDEC  shift 119
+	BITSHIFT  shift 120
+	RELATION  shift 121
+	EQNEQ  shift 122
+	LOGICALAND  shift 123
+	LOGICALOR  shift 124
+	ASSIGNMENT  shift 125
+	'='  shift 126
+	'|'  shift 127
+	'^'  shift 128
+	'&'  shift 129
+	'+'  shift 130
+	'-'  shift 131
+	'*'  shift 132
+	'/'  shift 133
+	'%'  shift 134
+	'('  shift 135
+	','  reduce 41
+	')'  reduce 41
+
+	assignment  goto 136
+
+
+state 175
+	expr : expr '(' args . ')'  (31)
+	args : args . ',' expr  (42)
+
+	','  shift 193
+	')'  shift 194
+	.  error
+
+
+state 176
+	expr : expr . assignment expr  (8)
+	expr : expr assignment expr .  (8)
+	expr : expr . '+' expr  (9)
+	expr : expr . '-' expr  (10)
+	expr : expr . '*' expr  (11)
+	expr : expr . '/' expr  (12)
+	expr : expr . '%' expr  (13)
+	expr : expr . '|' expr  (14)
+	expr : expr . '&' expr  (15)
+	expr : expr . '^' expr  (16)
+	expr : expr . LOGICALOR expr  (17)
+	expr : expr . LOGICALAND expr  (18)
+	expr : expr . EQNEQ expr  (19)
+	expr : expr . RELATION expr  (20)
+	expr : expr . BITSHIFT expr  (21)
+	expr : expr . INCDEC  (29)
+	expr : expr . '(' args ')'  (31)
+	expr : expr . MEMBER ID  (33)
+
+	MEMBER  shift 118
+	INCDEC  shift 119
+	BITSHIFT  shift 120
+	RELATION  shift 121
+	EQNEQ  shift 122
+	LOGICALAND  shift 123
+	LOGICALOR  shift 124
+	ASSIGNMENT  shift 125
+	'='  shift 126
+	'|'  shift 127
+	'^'  shift 128
+	'&'  shift 129
+	'+'  shift 130
+	'-'  shift 131
+	'*'  shift 132
+	'/'  shift 133
+	'%'  shift 134
+	'('  shift 135
+	';'  reduce 8
+	','  reduce 8
+	')'  reduce 8
+	']'  reduce 8
+	'}'  reduce 8
+	':'  reduce 8
+
+	assignment  goto 136
+
+
+state 177
+	delFnParam : delType '*' ID .  (102)
+
+	.  reduce 102
+
+
+state 178
+	delFnParams : delFnParams ',' delFnParam .  (97)
+
+	.  reduce 97
+
+
+state 179
+	arrayContent : '{' . arrayContents '}'  (92)
+
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	'{'  shift 179
+	.  error
+
+	const  goto 68
+	arrayContents  goto 195
+	arrayContent  goto 181
+	expr  goto 182
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 180
+	delArray : ID delArrayDims '=' '{' arrayContents . '}'  (87)
+	arrayContents : arrayContents . ',' arrayContent  (91)
+
+	','  shift 196
+	'}'  shift 197
+	.  error
+
+
+state 181
+	arrayContents : arrayContent .  (90)
+
+	.  reduce 90
+
+
+state 182
+	expr : expr . assignment expr  (8)
+	expr : expr . '+' expr  (9)
+	expr : expr . '-' expr  (10)
+	expr : expr . '*' expr  (11)
+	expr : expr . '/' expr  (12)
+	expr : expr . '%' expr  (13)
+	expr : expr . '|' expr  (14)
+	expr : expr . '&' expr  (15)
+	expr : expr . '^' expr  (16)
+	expr : expr . LOGICALOR expr  (17)
+	expr : expr . LOGICALAND expr  (18)
+	expr : expr . EQNEQ expr  (19)
+	expr : expr . RELATION expr  (20)
+	expr : expr . BITSHIFT expr  (21)
+	expr : expr . INCDEC  (29)
+	expr : expr . '(' args ')'  (31)
+	expr : expr . MEMBER ID  (33)
+	arrayContent : expr .  (93)
+
+	MEMBER  shift 118
+	INCDEC  shift 119
+	BITSHIFT  shift 120
+	RELATION  shift 121
+	EQNEQ  shift 122
+	LOGICALAND  shift 123
+	LOGICALOR  shift 124
+	ASSIGNMENT  shift 125
+	'='  shift 126
+	'|'  shift 127
+	'^'  shift 128
+	'&'  shift 129
+	'+'  shift 130
+	'-'  shift 131
+	'*'  shift 132
+	'/'  shift 133
+	'%'  shift 134
+	'('  shift 135
+	','  reduce 93
+	'}'  reduce 93
+
+	assignment  goto 136
+
+
+state 183
+	delArrayDims : delArrayDims '[' expr ']' .  (89)
+
+	.  reduce 89
+
+
+state 184
+	delFn : delType '*' ID '(' delFnParams ')' .  (95)
+
+	.  reduce 95
+
+
+state 185
+	expr : expr . assignment expr  (8)
+	expr : expr . '+' expr  (9)
+	expr : expr . '-' expr  (10)
+	expr : expr . '*' expr  (11)
+	expr : expr . '/' expr  (12)
+	expr : expr . '%' expr  (13)
+	expr : expr . '|' expr  (14)
+	expr : expr . '&' expr  (15)
+	expr : expr . '^' expr  (16)
+	expr : expr . LOGICALOR expr  (17)
+	expr : expr . LOGICALAND expr  (18)
+	expr : expr . EQNEQ expr  (19)
+	expr : expr . RELATION expr  (20)
+	expr : expr . BITSHIFT expr  (21)
+	expr : expr . INCDEC  (29)
+	expr : expr . '(' args ')'  (31)
+	expr : expr . MEMBER ID  (33)
+	ifElseStmt : IF '(' expr . ')' compoundStmt  (116)
+	ifElseStmt : IF '(' expr . ')' compoundStmt ELSE compoundStmt  (117)
+
+	MEMBER  shift 118
+	INCDEC  shift 119
+	BITSHIFT  shift 120
+	RELATION  shift 121
+	EQNEQ  shift 122
+	LOGICALAND  shift 123
+	LOGICALOR  shift 124
+	ASSIGNMENT  shift 125
+	'='  shift 126
+	'|'  shift 127
+	'^'  shift 128
+	'&'  shift 129
+	'+'  shift 130
+	'-'  shift 131
+	'*'  shift 132
+	'/'  shift 133
+	'%'  shift 134
+	'('  shift 135
+	')'  shift 198
+	.  error
+
+	assignment  goto 136
+
+
+state 186
+	expr : expr . assignment expr  (8)
+	expr : expr . '+' expr  (9)
+	expr : expr . '-' expr  (10)
+	expr : expr . '*' expr  (11)
+	expr : expr . '/' expr  (12)
+	expr : expr . '%' expr  (13)
+	expr : expr . '|' expr  (14)
+	expr : expr . '&' expr  (15)
+	expr : expr . '^' expr  (16)
+	expr : expr . LOGICALOR expr  (17)
+	expr : expr . LOGICALAND expr  (18)
+	expr : expr . EQNEQ expr  (19)
+	expr : expr . RELATION expr  (20)
+	expr : expr . BITSHIFT expr  (21)
+	expr : expr . INCDEC  (29)
+	expr : expr . '(' args ')'  (31)
+	expr : expr . MEMBER ID  (33)
+	switchStmt : SWITCH '(' expr . ')' '{' switchClauses '}'  (118)
+	switchStmt : SWITCH '(' expr . ')' '{' '}'  (119)
+
+	MEMBER  shift 118
+	INCDEC  shift 119
+	BITSHIFT  shift 120
+	RELATION  shift 121
+	EQNEQ  shift 122
+	LOGICALAND  shift 123
+	LOGICALOR  shift 124
+	ASSIGNMENT  shift 125
+	'='  shift 126
+	'|'  shift 127
+	'^'  shift 128
+	'&'  shift 129
+	'+'  shift 130
+	'-'  shift 131
+	'*'  shift 132
+	'/'  shift 133
+	'%'  shift 134
+	'('  shift 135
+	')'  shift 199
+	.  error
+
+	assignment  goto 136
+
+
+state 187
+	expr : expr . assignment expr  (8)
+	expr : expr . '+' expr  (9)
+	expr : expr . '-' expr  (10)
+	expr : expr . '*' expr  (11)
+	expr : expr . '/' expr  (12)
+	expr : expr . '%' expr  (13)
+	expr : expr . '|' expr  (14)
+	expr : expr . '&' expr  (15)
+	expr : expr . '^' expr  (16)
+	expr : expr . LOGICALOR expr  (17)
+	expr : expr . LOGICALAND expr  (18)
+	expr : expr . EQNEQ expr  (19)
+	expr : expr . RELATION expr  (20)
+	expr : expr . BITSHIFT expr  (21)
+	expr : expr . INCDEC  (29)
+	expr : expr . '(' args ')'  (31)
+	expr : expr . MEMBER ID  (33)
+	whileStmt : WHILE '(' expr . ')' stmt  (124)
+
+	MEMBER  shift 118
+	INCDEC  shift 119
+	BITSHIFT  shift 120
+	RELATION  shift 121
+	EQNEQ  shift 122
+	LOGICALAND  shift 123
+	LOGICALOR  shift 124
+	ASSIGNMENT  shift 125
+	'='  shift 126
+	'|'  shift 127
+	'^'  shift 128
+	'&'  shift 129
+	'+'  shift 130
+	'-'  shift 131
+	'*'  shift 132
+	'/'  shift 133
+	'%'  shift 134
+	'('  shift 135
+	')'  shift 200
+	.  error
+
+	assignment  goto 136
+
+
+state 188
+	whileStmt : DO stmt WHILE . '(' expr ')' ';'  (125)
+
+	'('  shift 201
+	.  error
+
+
+state 189
+	forStmt : FOR '(' forExpr . ';' forExpr ';' forExpr ')' stmt  (126)
+
+	';'  shift 202
+	.  error
+
+
+state 190
+	expr : expr . assignment expr  (8)
+	expr : expr . '+' expr  (9)
+	expr : expr . '-' expr  (10)
+	expr : expr . '*' expr  (11)
+	expr : expr . '/' expr  (12)
+	expr : expr . '%' expr  (13)
+	expr : expr . '|' expr  (14)
+	expr : expr . '&' expr  (15)
+	expr : expr . '^' expr  (16)
+	expr : expr . LOGICALOR expr  (17)
+	expr : expr . LOGICALAND expr  (18)
+	expr : expr . EQNEQ expr  (19)
+	expr : expr . RELATION expr  (20)
+	expr : expr . BITSHIFT expr  (21)
+	expr : expr . INCDEC  (29)
+	expr : expr . '(' args ')'  (31)
+	expr : expr . MEMBER ID  (33)
+	forExpr : expr .  (127)
+
+	MEMBER  shift 118
+	INCDEC  shift 119
+	BITSHIFT  shift 120
+	RELATION  shift 121
+	EQNEQ  shift 122
+	LOGICALAND  shift 123
+	LOGICALOR  shift 124
+	ASSIGNMENT  shift 125
+	'='  shift 126
+	'|'  shift 127
+	'^'  shift 128
+	'&'  shift 129
+	'+'  shift 130
+	'-'  shift 131
+	'*'  shift 132
+	'/'  shift 133
+	'%'  shift 134
+	'('  shift 135
+	';'  reduce 127
+	')'  reduce 127
+
+	assignment  goto 136
+
+
+state 191
+	returnStmt : RETURN expr ';' .  (129)
+
+	.  reduce 129
+
+
+state 192
+	expr : expr . assignment expr  (8)
+	expr : expr . '+' expr  (9)
+	expr : expr . '-' expr  (10)
+	expr : expr . '*' expr  (11)
+	expr : expr . '/' expr  (12)
+	expr : expr . '%' expr  (13)
+	expr : expr . '|' expr  (14)
+	expr : expr . '&' expr  (15)
+	expr : expr . '^' expr  (16)
+	expr : expr . LOGICALOR expr  (17)
+	expr : expr . LOGICALAND expr  (18)
+	expr : expr . EQNEQ expr  (19)
+	expr : expr . RELATION expr  (20)
+	expr : expr . BITSHIFT expr  (21)
+	expr : expr . INCDEC  (29)
+	expr : expr . '(' args ')'  (31)
+	expr : '(' delType ')' expr .  (32)
+	expr : expr . MEMBER ID  (33)
+
+	INCDEC  shift 119
+	MEMBER  reduce 32
+	BITSHIFT  reduce 32
+	RELATION  reduce 32
+	EQNEQ  reduce 32
+	LOGICALAND  reduce 32
+	LOGICALOR  reduce 32
+	ASSIGNMENT  reduce 32
+	';'  reduce 32
+	','  reduce 32
+	'='  reduce 32
+	'|'  reduce 32
+	'^'  reduce 32
+	'&'  reduce 32
+	'+'  reduce 32
+	'-'  reduce 32
+	'*'  reduce 32
+	'/'  reduce 32
+	'%'  reduce 32
+	'('  reduce 32
+	')'  reduce 32
+	']'  reduce 32
+	'}'  reduce 32
+	':'  reduce 32
+
+	assignment  goto 136
+
+
+state 193
+	args : args ',' . expr  (42)
+
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	.  error
+
+	const  goto 68
+	expr  goto 203
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 194
+	expr : expr '(' args ')' .  (31)
+
+	.  reduce 31
+
+
+state 195
+	arrayContents : arrayContents . ',' arrayContent  (91)
+	arrayContent : '{' arrayContents . '}'  (92)
+
+	','  shift 196
+	'}'  shift 204
+	.  error
+
+
+state 196
+	arrayContents : arrayContents ',' . arrayContent  (91)
+
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	'{'  shift 179
+	.  error
+
+	const  goto 68
+	arrayContent  goto 205
+	expr  goto 182
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 197
+	delArray : ID delArrayDims '=' '{' arrayContents '}' .  (87)
+
+	.  reduce 87
+
+
+state 198
+	ifElseStmt : IF '(' expr ')' . compoundStmt  (116)
+	ifElseStmt : IF '(' expr ')' . compoundStmt ELSE compoundStmt  (117)
+
+	'{'  shift 37
+	.  error
+
+	compoundStmt  goto 206
+
+
+state 199
+	switchStmt : SWITCH '(' expr ')' . '{' switchClauses '}'  (118)
+	switchStmt : SWITCH '(' expr ')' . '{' '}'  (119)
+
+	'{'  shift 207
+	.  error
+
+
+state 200
+	whileStmt : WHILE '(' expr ')' . stmt  (124)
+
+	CONST  shift 1
+	SIGNED_UNSIGNED  shift 2
+	LONG  shift 3
+	SHORT  shift 4
+	INT  shift 5
+	CHAR  shift 6
+	FLOAT  shift 7
+	DOUBLE  shift 8
+	VOID  shift 9
+	IF  shift 86
+	SWITCH  shift 87
+	WHILE  shift 88
+	DO  shift 89
+	FOR  shift 90
+	RETURN  shift 91
+	BREAK  shift 92
+	CONTINUE  shift 93
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	'{'  shift 37
+	.  error
+
+	stmt  goto 208
+	ifElseStmt  goto 96
+	switchStmt  goto 97
+	whileStmt  goto 98
+	forStmt  goto 99
+	returnStmt  goto 100
+	breakStmt  goto 101
+	continueStmt  goto 102
+	compoundStmt  goto 103
+	delType  goto 104
+	delLongShort  goto 13
+	const  goto 68
+	delVarsScalar  goto 105
+	delVarsArray  goto 106
+	expr  goto 107
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 201
+	whileStmt : DO stmt WHILE '(' . expr ')' ';'  (125)
+
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	.  error
+
+	const  goto 68
+	expr  goto 209
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 202
+	forStmt : FOR '(' forExpr ';' . forExpr ';' forExpr ')' stmt  (126)
+	forExpr : .  (128)
+
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	';'  reduce 128
+
+	forExpr  goto 210
+	const  goto 68
+	expr  goto 190
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 203
+	expr : expr . assignment expr  (8)
+	expr : expr . '+' expr  (9)
+	expr : expr . '-' expr  (10)
+	expr : expr . '*' expr  (11)
+	expr : expr . '/' expr  (12)
+	expr : expr . '%' expr  (13)
+	expr : expr . '|' expr  (14)
+	expr : expr . '&' expr  (15)
+	expr : expr . '^' expr  (16)
+	expr : expr . LOGICALOR expr  (17)
+	expr : expr . LOGICALAND expr  (18)
+	expr : expr . EQNEQ expr  (19)
+	expr : expr . RELATION expr  (20)
+	expr : expr . BITSHIFT expr  (21)
+	expr : expr . INCDEC  (29)
+	expr : expr . '(' args ')'  (31)
+	expr : expr . MEMBER ID  (33)
+	args : args ',' expr .  (42)
+
+	MEMBER  shift 118
+	INCDEC  shift 119
+	BITSHIFT  shift 120
+	RELATION  shift 121
+	EQNEQ  shift 122
+	LOGICALAND  shift 123
+	LOGICALOR  shift 124
+	ASSIGNMENT  shift 125
+	'='  shift 126
+	'|'  shift 127
+	'^'  shift 128
+	'&'  shift 129
+	'+'  shift 130
+	'-'  shift 131
+	'*'  shift 132
+	'/'  shift 133
+	'%'  shift 134
+	'('  shift 135
+	','  reduce 42
+	')'  reduce 42
+
+	assignment  goto 136
+
+
+state 204
+	arrayContent : '{' arrayContents '}' .  (92)
+
+	.  reduce 92
+
+
+state 205
+	arrayContents : arrayContents ',' arrayContent .  (91)
+
+	.  reduce 91
+
+
+state 206
+	ifElseStmt : IF '(' expr ')' compoundStmt .  (116)
+	ifElseStmt : IF '(' expr ')' compoundStmt . ELSE compoundStmt  (117)
+
+	ELSE  shift 211
+	CONST  reduce 116
+	SIGNED_UNSIGNED  reduce 116
+	LONG  reduce 116
+	SHORT  reduce 116
+	INT  reduce 116
+	CHAR  reduce 116
+	FLOAT  reduce 116
+	DOUBLE  reduce 116
+	VOID  reduce 116
+	IF  reduce 116
+	SWITCH  reduce 116
+	CASE  reduce 116
+	DEFAULT  reduce 116
+	WHILE  reduce 116
+	DO  reduce 116
+	FOR  reduce 116
+	RETURN  reduce 116
+	BREAK  reduce 116
+	CONTINUE  reduce 116
+	ID  reduce 116
+	CONST_INT  reduce 116
+	CONST_FLOAT  reduce 116
+	CONST_CHAR  reduce 116
+	CONST_STRING  reduce 116
+	INCDEC  reduce 116
+	'&'  reduce 116
+	'+'  reduce 116
+	'-'  reduce 116
+	'*'  reduce 116
+	'!'  reduce 116
+	'~'  reduce 116
+	'('  reduce 116
+	'{'  reduce 116
+	'}'  reduce 116
+
+
+state 207
+	switchStmt : SWITCH '(' expr ')' '{' . switchClauses '}'  (118)
+	switchStmt : SWITCH '(' expr ')' '{' . '}'  (119)
+
+	CASE  shift 212
+	DEFAULT  shift 213
+	'}'  shift 214
+	.  error
+
+	switchClauses  goto 215
+	switchClause  goto 216
+
+
+state 208
+	whileStmt : WHILE '(' expr ')' stmt .  (124)
+
+	.  reduce 124
+
+
+state 209
+	expr : expr . assignment expr  (8)
+	expr : expr . '+' expr  (9)
+	expr : expr . '-' expr  (10)
+	expr : expr . '*' expr  (11)
+	expr : expr . '/' expr  (12)
+	expr : expr . '%' expr  (13)
+	expr : expr . '|' expr  (14)
+	expr : expr . '&' expr  (15)
+	expr : expr . '^' expr  (16)
+	expr : expr . LOGICALOR expr  (17)
+	expr : expr . LOGICALAND expr  (18)
+	expr : expr . EQNEQ expr  (19)
+	expr : expr . RELATION expr  (20)
+	expr : expr . BITSHIFT expr  (21)
+	expr : expr . INCDEC  (29)
+	expr : expr . '(' args ')'  (31)
+	expr : expr . MEMBER ID  (33)
+	whileStmt : DO stmt WHILE '(' expr . ')' ';'  (125)
+
+	MEMBER  shift 118
+	INCDEC  shift 119
+	BITSHIFT  shift 120
+	RELATION  shift 121
+	EQNEQ  shift 122
+	LOGICALAND  shift 123
+	LOGICALOR  shift 124
+	ASSIGNMENT  shift 125
+	'='  shift 126
+	'|'  shift 127
+	'^'  shift 128
+	'&'  shift 129
+	'+'  shift 130
+	'-'  shift 131
+	'*'  shift 132
+	'/'  shift 133
+	'%'  shift 134
+	'('  shift 135
+	')'  shift 217
+	.  error
+
+	assignment  goto 136
+
+
+state 210
+	forStmt : FOR '(' forExpr ';' forExpr . ';' forExpr ')' stmt  (126)
+
+	';'  shift 218
+	.  error
+
+
+state 211
+	ifElseStmt : IF '(' expr ')' compoundStmt ELSE . compoundStmt  (117)
+
+	'{'  shift 37
+	.  error
+
+	compoundStmt  goto 219
+
+
+state 212
+	switchClause : CASE . expr ':' stmts  (122)
+
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	.  error
+
+	const  goto 68
+	expr  goto 220
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 213
+	switchClause : DEFAULT . ':' stmts  (123)
+
+	':'  shift 221
+	.  error
+
+
+state 214
+	switchStmt : SWITCH '(' expr ')' '{' '}' .  (119)
+
+	.  reduce 119
+
+
+state 215
+	switchStmt : SWITCH '(' expr ')' '{' switchClauses . '}'  (118)
+	switchClauses : switchClauses . switchClause  (121)
+
+	CASE  shift 212
+	DEFAULT  shift 213
+	'}'  shift 222
+	.  error
+
+	switchClause  goto 223
+
+
+state 216
+	switchClauses : switchClause .  (120)
+
+	.  reduce 120
+
+
+state 217
+	whileStmt : DO stmt WHILE '(' expr ')' . ';'  (125)
+
+	';'  shift 224
+	.  error
+
+
+state 218
+	forStmt : FOR '(' forExpr ';' forExpr ';' . forExpr ')' stmt  (126)
+	forExpr : .  (128)
+
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	')'  reduce 128
+
+	forExpr  goto 225
+	const  goto 68
+	expr  goto 190
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 219
+	ifElseStmt : IF '(' expr ')' compoundStmt ELSE compoundStmt .  (117)
+
+	.  reduce 117
+
+
+state 220
+	expr : expr . assignment expr  (8)
+	expr : expr . '+' expr  (9)
+	expr : expr . '-' expr  (10)
+	expr : expr . '*' expr  (11)
+	expr : expr . '/' expr  (12)
+	expr : expr . '%' expr  (13)
+	expr : expr . '|' expr  (14)
+	expr : expr . '&' expr  (15)
+	expr : expr . '^' expr  (16)
+	expr : expr . LOGICALOR expr  (17)
+	expr : expr . LOGICALAND expr  (18)
+	expr : expr . EQNEQ expr  (19)
+	expr : expr . RELATION expr  (20)
+	expr : expr . BITSHIFT expr  (21)
+	expr : expr . INCDEC  (29)
+	expr : expr . '(' args ')'  (31)
+	expr : expr . MEMBER ID  (33)
+	switchClause : CASE expr . ':' stmts  (122)
+
+	MEMBER  shift 118
+	INCDEC  shift 119
+	BITSHIFT  shift 120
+	RELATION  shift 121
+	EQNEQ  shift 122
+	LOGICALAND  shift 123
+	LOGICALOR  shift 124
+	ASSIGNMENT  shift 125
+	'='  shift 126
+	'|'  shift 127
+	'^'  shift 128
+	'&'  shift 129
+	'+'  shift 130
+	'-'  shift 131
+	'*'  shift 132
+	'/'  shift 133
+	'%'  shift 134
+	'('  shift 135
+	':'  shift 226
+	.  error
+
+	assignment  goto 136
+
+
+state 221
+	switchClause : DEFAULT ':' . stmts  (123)
+	stmts : .  (104)
+
+	.  reduce 104
+
+	stmts  goto 227
+
+
+state 222
+	switchStmt : SWITCH '(' expr ')' '{' switchClauses '}' .  (118)
+
+	.  reduce 118
+
+
+state 223
+	switchClauses : switchClauses switchClause .  (121)
+
+	.  reduce 121
+
+
+state 224
+	whileStmt : DO stmt WHILE '(' expr ')' ';' .  (125)
+
+	.  reduce 125
+
+
+state 225
+	forStmt : FOR '(' forExpr ';' forExpr ';' forExpr . ')' stmt  (126)
+
+	')'  shift 228
+	.  error
+
+
+state 226
+	switchClause : CASE expr ':' . stmts  (122)
+	stmts : .  (104)
+
+	.  reduce 104
+
+	stmts  goto 229
+
+
+state 227
+	stmts : stmts . stmt  (103)
+	switchClause : DEFAULT ':' stmts .  (123)
+
+	CONST  shift 1
+	SIGNED_UNSIGNED  shift 2
+	LONG  shift 3
+	SHORT  shift 4
+	INT  shift 5
+	CHAR  shift 6
+	FLOAT  shift 7
+	DOUBLE  shift 8
+	VOID  shift 9
+	IF  shift 86
+	SWITCH  shift 87
+	WHILE  shift 88
+	DO  shift 89
+	FOR  shift 90
+	RETURN  shift 91
+	BREAK  shift 92
+	CONTINUE  shift 93
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	'{'  shift 37
+	CASE  reduce 123
+	DEFAULT  reduce 123
+	'}'  reduce 123
+
+	stmt  goto 95
+	ifElseStmt  goto 96
+	switchStmt  goto 97
+	whileStmt  goto 98
+	forStmt  goto 99
+	returnStmt  goto 100
+	breakStmt  goto 101
+	continueStmt  goto 102
+	compoundStmt  goto 103
+	delType  goto 104
+	delLongShort  goto 13
+	const  goto 68
+	delVarsScalar  goto 105
+	delVarsArray  goto 106
+	expr  goto 107
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 228
+	forStmt : FOR '(' forExpr ';' forExpr ';' forExpr ')' . stmt  (126)
+
+	CONST  shift 1
+	SIGNED_UNSIGNED  shift 2
+	LONG  shift 3
+	SHORT  shift 4
+	INT  shift 5
+	CHAR  shift 6
+	FLOAT  shift 7
+	DOUBLE  shift 8
+	VOID  shift 9
+	IF  shift 86
+	SWITCH  shift 87
+	WHILE  shift 88
+	DO  shift 89
+	FOR  shift 90
+	RETURN  shift 91
+	BREAK  shift 92
+	CONTINUE  shift 93
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	'{'  shift 37
+	.  error
+
+	stmt  goto 230
+	ifElseStmt  goto 96
+	switchStmt  goto 97
+	whileStmt  goto 98
+	forStmt  goto 99
+	returnStmt  goto 100
+	breakStmt  goto 101
+	continueStmt  goto 102
+	compoundStmt  goto 103
+	delType  goto 104
+	delLongShort  goto 13
+	const  goto 68
+	delVarsScalar  goto 105
+	delVarsArray  goto 106
+	expr  goto 107
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 229
+	stmts : stmts . stmt  (103)
+	switchClause : CASE expr ':' stmts .  (122)
+
+	CONST  shift 1
+	SIGNED_UNSIGNED  shift 2
+	LONG  shift 3
+	SHORT  shift 4
+	INT  shift 5
+	CHAR  shift 6
+	FLOAT  shift 7
+	DOUBLE  shift 8
+	VOID  shift 9
+	IF  shift 86
+	SWITCH  shift 87
+	WHILE  shift 88
+	DO  shift 89
+	FOR  shift 90
+	RETURN  shift 91
+	BREAK  shift 92
+	CONTINUE  shift 93
+	ID  shift 55
+	CONST_INT  shift 56
+	CONST_FLOAT  shift 57
+	CONST_CHAR  shift 58
+	CONST_STRING  shift 59
+	INCDEC  shift 60
+	'&'  shift 61
+	'+'  shift 62
+	'-'  shift 63
+	'*'  shift 64
+	'!'  shift 65
+	'~'  shift 66
+	'('  shift 67
+	'{'  shift 37
+	CASE  reduce 122
+	DEFAULT  reduce 122
+	'}'  reduce 122
+
+	stmt  goto 95
+	ifElseStmt  goto 96
+	switchStmt  goto 97
+	whileStmt  goto 98
+	forStmt  goto 99
+	returnStmt  goto 100
+	breakStmt  goto 101
+	continueStmt  goto 102
+	compoundStmt  goto 103
+	delType  goto 104
+	delLongShort  goto 13
+	const  goto 68
+	delVarsScalar  goto 105
+	delVarsArray  goto 106
+	expr  goto 107
+	factor  goto 70
+	mutable  goto 71
+	immutable  goto 72
+
+
+state 230
+	forStmt : FOR '(' forExpr ';' forExpr ';' forExpr ')' stmt .  (126)
+
+	.  reduce 126
+
+
+67 terminals, 37 nonterminals
+134 grammar rules, 231 states
